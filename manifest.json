@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "Tranquil Tabs",
+    "version": "1.0.0",
+    "description": "An Extension to help you use the internet less and less",
+
+    "content_scripts": [
+        {
+            "matches": [ "<all_urls>" ],
+            "js": [ "/content_scripts.js" ],
+            "css": ["extension_style.css"]
+        }
+    ],
+
+    "action": {
+        "browser_style": true,
+        "default_icon": {
+            "128": "/icon_128.svg"
+        },
+        "default_title": "Tranquil Tabs"
+    },
+
+    "permissions": [
+      "storage"
+    ],
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "@Tranquil_Tabs"
+        }
+    }
+}
