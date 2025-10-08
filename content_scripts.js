@@ -1,18 +1,111 @@
 ////////////////////////////
 //
+//  Global Data
+//
+////////////////////////////
+// let restrictedURLS = JSON.parse(localStorage.getItem("URLS"));
+
+////////////////////////////
+//
+//  Helper Functions
+//
+////////////////////////////
+
+// Finds the matched URL in given list of URLS
+async function findMatch(restrictedURLS) {
+    // Look through list and find match or not
+    for (let i = 0; i < restrictedURLS.length; i++) {
+        let regEx = new RegExp(restrictedURLS[i]);
+
+        // Found Match, stop searching
+        if (window.location.href.match(regEx)) {
+            return restrictedURLS[i];
+        }
+    }
+
+    return null;
+}
+
+////////////////////////////
+//
+//  Make Data Struct
+//
+////////////////////////////
+class RestrictionList {
+  constructor(url_regex, opens_total, opens_left, wait_time) {
+    this.url_regex = url_regex;
+    this.opens_total = opens_total;
+    this.opens_left = opens_left;
+    this.wait_time = wait_time;
+  }
+}
+
+
+
+
+
+////////////////////////////
+//
+//  Get Url Match List
+//
+////////////////////////////
+
+////////////////
+// Testing Purposes
+////////////////
+
+// Making Regex Pattern
+youtubeRegex = "https:\/\/www\.youtube\.com.*";
+appleRegex = "apple";
+
+let urls = [];
+
+urls.push(youtubeRegex);
+urls.push(appleRegex);
+
+let urls_json = JSON.stringify(urls);
+
+// // Store URLS list
+localStorage.setItem("URLS", urls_json);
+// Get URLS
+
+let youtubeRestrics = new RestrictionList(youtubeRegex, 3, 2, 15);
+// console.log(window.location.href);
+
+// Get Current List
+let restrictedURLS = JSON.parse(localStorage.getItem("URLS"));
+
+// Get Match, or null
+let matchedURL = findMatch(restrictedURLS);
+
+
+////////////////////////////
+//
 //  Block Page
 //
 ////////////////////////////
 
-const blockPage = document.createElement('div');
-blockPage.id = "blockPageBackground";
-document.body.append(blockPage);
+// Check all URLS and see if matches current page
 
-const requestUnblock = document.createElement("button");
-requestUnblock.textContent = "Unblock?";
-requestUnblock.className = "button";
-requestUnblock.id = "requestUnblock";
-blockPage.append(requestUnblock);
+
+
+// Found a match, block
+if (matchedURL) {
+    const blockPage = document.createElement('div');
+    blockPage.id = "blockPageBackground";
+    document.body.append(blockPage);
+
+    const requestUnblock = document.createElement("button");
+    requestUnblock.textContent = "Unblock?";
+    requestUnblock.className = "button";
+    requestUnblock.id = "requestUnblock";
+    requestUnblock.addEventListener('click', function(){
+        blockPage.remove();
+    });
+    blockPage.append(requestUnblock);
+}
+
+
 
 
 // let style = document.createElement('style');

@@ -21,14 +21,12 @@
 .button {
     border-radius: 40px;
     height: 30px;
-    width: 31%;
     box-sizing: border-box;
     background-color: #272727;
     color: #f1f1f1;
     font-family: "Roboto", "Arial", sans-serif;
     border: none;
-    margin: 3px;
-    margin-bottom: 6px;
+    margin: auto;;
     cursor:pointer;
     font-size: 14px;
     font-weight: 500; 
@@ -40,4 +38,35 @@
 
 .button:active {
     background-color: #535353;
+}
+
+
+
+/* Popup CSS */
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Style the submit button */
+.form-inline button {
+  padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
 }

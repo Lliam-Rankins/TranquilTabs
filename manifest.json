@@ -17,7 +17,8 @@
         "default_icon": {
             "128": "/icon_128.svg"
         },
-        "default_title": "Tranquil Tabs"
+        "default_title": "Tranquil Tabs",
+        "default_popup": "popup.html"
     },
 
     "permissions": [
