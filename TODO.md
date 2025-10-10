@@ -1,0 +1,1 @@
+- Daily Clock, add func for weekly opens too

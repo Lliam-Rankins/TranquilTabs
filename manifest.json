@@ -7,10 +7,28 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "/content_scripts.js" ],
-            "css": ["extension_style.css"]
+            "js": [ "content_scripts.js"],
+            "css": ["extension_style.css"],
+            "type": "module"
         }
     ],
+    "background": {
+        "service_worker": "service_worker.js",
+        "type": "module"
+    },
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+
+
+
+    "permissions": [
+        "storage",
+        "offscreen"
+    ], 
+
+
 
     "action": {
         "browser_style": true,
@@ -20,11 +38,6 @@
         "default_title": "Tranquil Tabs",
         "default_popup": "popup.html"
     },
-
-    "permissions": [
-      "storage"
-    ],
-
     "browser_specific_settings": {
         "gecko": {
             "id": "@Tranquil_Tabs"

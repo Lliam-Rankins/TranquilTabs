@@ -3,7 +3,8 @@
 //  Global Data
 //
 ////////////////////////////
-// let restrictedURLS = JSON.parse(localStorage.getItem("URLS"));
+let restriction_list;
+let matchedURL;
 
 ////////////////////////////
 //
@@ -11,15 +12,50 @@
 //
 ////////////////////////////
 
+//////////////////////
+// Start Timer
+//////////////////////
+
+//////////////////////
+// Restriction List
+//////////////////////
+async function requestRestrictionList() {
+    let result = await chrome.storage.local.get("URLS");
+
+    return result.URLS || [];
+}
+
+//////////////////////
+// Restriction
+//////////////////////
+async function requestRestriction(url) {
+    let result = await chrome.storage.local.get(url);
+            
+    return result[url];
+}
+
 // Finds the matched URL in given list of URLS
-async function findMatch(restrictedURLS) {
+async function findMatch(restriction_list) {
+    if (!restriction_list) return null;
+
     // Look through list and find match or not
-    for (let i = 0; i < restrictedURLS.length; i++) {
-        let regEx = new RegExp(restrictedURLS[i]);
+    for (let i = 0; i < restriction_list.length; i++) {
+        // Convert to Regex Format
+        let url = restriction_list[i].replaceAll("/", "\\/");
+        url = url.replaceAll(".", "\.");
+        urlRegex = url.replaceAll("*", ".\*");
+        
+
+        console.log(urlRegex);
+
+        let regEx = new RegExp(urlRegex);
+
+        console.log(regEx);
 
         // Found Match, stop searching
         if (window.location.href.match(regEx)) {
-            return restrictedURLS[i];
+            console.log(window.location.href, " : ", regEx);
+            return restriction_list[i];
         }
     }
 
@@ -31,7 +67,7 @@ async function findMatch(restrictedURLS) {
 //  Make Data Struct
 //
 ////////////////////////////
-class RestrictionList {
+class Restriction {
   constructor(url_regex, opens_total, opens_left, wait_time) {
     this.url_regex = url_regex;
     this.opens_total = opens_total;
@@ -49,63 +85,54 @@ class RestrictionList {
 //  Get Url Match List
 //
 ////////////////////////////
+async function init() {
+    // Get Current Restriction List
+    restriction_list = await requestRestrictionList();
 
-////////////////
-// Testing Purposes
-////////////////
+    console.log(restriction_list);
 
-// Making Regex Pattern
-youtubeRegex = "https:\/\/www\.youtube\.com.*";
-appleRegex = "apple";
+    ////////////////////////////
+    //
+    //  Block Page
+    //
+    ////////////////////////////
 
-let urls = [];
+    // Get Match, or null
+    matchedURL = await findMatch(restriction_list);
 
-urls.push(youtubeRegex);
-urls.push(appleRegex);
+    console.log(matchedURL);
 
-let urls_json = JSON.stringify(urls);
+    // Found a match, block
+    if (matchedURL) {
+        // Get Restriction
+        let restriction = await requestRestriction(matchedURL);
 
-// // Store URLS list
-localStorage.setItem("URLS", urls_json);
-// Get URLS
+        //////////////////
+        //  Make Block
+        //////////////////
 
-let youtubeRestrics = new RestrictionList(youtubeRegex, 3, 2, 15);
-// console.log(window.location.href);
+        // Create Background
+        const blockPage = document.createElement('div');
+        blockPage.id = "blockPageBackground";
+        document.body.append(blockPage);
 
-// Get Current List
-let restrictedURLS = JSON.parse(localStorage.getItem("URLS"));
+        // Create Unblock Button
+        const requestUnblock = document.createElement("button");
+        requestUnblock.textContent = "Unblock? " + restriction.wait_time + "s";
+        requestUnblock.className = "button";
+        requestUnblock.id = "requestUnblock";
+        requestUnblock.addEventListener('click', function(){
+            blockPage.remove();
+        });
+        blockPage.append(requestUnblock);
+    }
 
-// Get Match, or null
-let matchedURL = findMatch(restrictedURLS);
-
-
-////////////////////////////
-//
-//  Block Page
-//
-////////////////////////////
-
-// Check all URLS and see if matches current page
-
-
-
-// Found a match, block
-if (matchedURL) {
-    const blockPage = document.createElement('div');
-    blockPage.id = "blockPageBackground";
-    document.body.append(blockPage);
-
-    const requestUnblock = document.createElement("button");
-    requestUnblock.textContent = "Unblock?";
-    requestUnblock.className = "button";
-    requestUnblock.id = "requestUnblock";
-    requestUnblock.addEventListener('click', function(){
-        blockPage.remove();
+    chrome.runtime.sendMessage({action: "startTimer", sender:"page"}).then((response) => {
+        console.log(response);
     });
-    blockPage.append(requestUnblock);
 }
 
-
+init();
 
 
 // let style = document.createElement('style');
