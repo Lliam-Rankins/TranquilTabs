@@ -7,21 +7,19 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "content_scripts.js"],
+            "js": [ "JavaScript/content_scripts.js"],
             "css": ["extension_style.css"],
             "type": "module"
         }
     ],
     "background": {
-        "service_worker": "service_worker.js",
+        "service_worker": "JavaScript/service_worker.js",
         "type": "module"
     },
     "options_ui": {
         "page": "options.html",
         "open_in_tab": true
     },
-
-
 
     "permissions": [
         "storage",

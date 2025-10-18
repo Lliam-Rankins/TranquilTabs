@@ -20,25 +20,27 @@
 
     <!-- Form for adding restricted URLS -->
     <div>
-        <label for="URL">URL:</label>
-        <input type="text" id="URL" placeholder="Website URL" name="URL">
-        <br>
+        <form>
+            <label for="URL">URL:</label>
+            <input type="text" id="URL" placeholder="Website URL" name="URL">
+            <br>
 
-        <label for="max_opens">Max Opens:</label>
-        <input type="number" id="max_opens" placeholder="4" name="max_opens">
-        <br>
+            <label for="max_opens">Max Opens:</label>
+            <input type="number" id="max_opens" placeholder="4" name="max_opens">
+            <br>
 
-        <label for="wait_time">Max Opens:</label>
-        <input type="number" id="wait_time" placeholder="30" name="wait_time">
-        <br>
+            <label for="wait_time">Max Opens:</label>
+            <input type="number" id="wait_time" placeholder="30" name="wait_time">
+            <br>
 
-        <label for="open_time">Max Opens:</label>
-        <input type="number" id="open_time" placeholder="60" name="open_time">
-        <br>
+            <label for="open_time">Max Opens:</label>
+            <input type="number" step=.01 id="open_time" placeholder="60" name="open_time">
+            <br>
 
-        <button id="submit" type="submit">Submit</button>
+            <button id="submit" type="submit">Submit</button>
+        </form>
     </div> 
 
     <!-- Script File -->
-    <script src="options.js"></script>
+    <script src="JavaScript/options.js"></script>
 </body>

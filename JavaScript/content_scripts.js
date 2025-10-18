@@ -5,6 +5,25 @@
 ////////////////////////////
 let restriction_list;
 let matchedURL;
+let blockPage;
+
+////////////////////////////
+//
+//  Listeners
+//
+////////////////////////////
+chrome.runtime.onMessage.addListener(async (response, sender) => {
+    let match = await findMatch();
+    if (response.action === 'unblockRestriction' && match == response.url) {
+        console.log("Unblock");
+        blockPage.style = "display: none;";
+    }
+
+    if (response.action === "blockRestriction") {
+        console.log("Block");
+        blockPage.style = "display: block;";
+    }
+});
 
 ////////////////////////////
 //
@@ -35,7 +54,7 @@ async function requestRestriction(url) {
 }
 
 // Finds the matched URL in given list of URLS
-async function findMatch(restriction_list) {
+async function findMatch() {
     if (!restriction_list) return null;
 
     // Look through list and find match or not
@@ -45,16 +64,10 @@ async function findMatch(restriction_list) {
         url = url.replaceAll(".", "\.");
         urlRegex = url.replaceAll("*", ".\*");
         
-
-        console.log(urlRegex);
-
         let regEx = new RegExp(urlRegex);
-
-        console.log(regEx);
 
         // Found Match, stop searching
         if (window.location.href.match(regEx)) {
-            console.log(window.location.href, " : ", regEx);
             return restriction_list[i];
         }
     }
@@ -73,6 +86,7 @@ class Restriction {
     this.opens_total = opens_total;
     this.opens_left = opens_left;
     this.wait_time = wait_time;
+    this.unblocked = false;
   }
 }
 
@@ -89,8 +103,6 @@ async function init() {
     // Get Current Restriction List
     restriction_list = await requestRestrictionList();
 
-    console.log(restriction_list);
-
     ////////////////////////////
     //
     //  Block Page
@@ -98,21 +110,20 @@ async function init() {
     ////////////////////////////
 
     // Get Match, or null
-    matchedURL = await findMatch(restriction_list);
-
-    console.log(matchedURL);
+    matchedURL = await findMatch();
 
     // Found a match, block
     if (matchedURL) {
         // Get Restriction
         let restriction = await requestRestriction(matchedURL);
 
+        
         //////////////////
         //  Make Block
         //////////////////
 
         // Create Background
-        const blockPage = document.createElement('div');
+        blockPage = document.createElement('div');
         blockPage.id = "blockPageBackground";
         document.body.append(blockPage);
 
@@ -122,14 +133,16 @@ async function init() {
         requestUnblock.className = "button";
         requestUnblock.id = "requestUnblock";
         requestUnblock.addEventListener('click', function(){
-            blockPage.remove();
+            chrome.runtime.sendMessage({action: "startTimerRequest", restriction:restriction})
         });
         blockPage.append(requestUnblock);
+
+        // Check if restriction is open or not, display accordingly
+        if (!restriction.unblocked) blockPage.style = "display: block;";
+        else                        blockPage.style = "display: none;";
     }
 
-    chrome.runtime.sendMessage({action: "startTimer", sender:"page"}).then((response) => {
-        console.log(response);
-    });
+    
 }
 
 init();

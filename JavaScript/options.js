@@ -57,7 +57,6 @@ async function updateRestrictionList(url) {
 //////////////////////
 // Restriction
 //////////////////////
-
 async function requestRestriction(url) {
     let result = await chrome.storage.local.get(url);
             
@@ -86,7 +85,8 @@ class Restriction {
     this.opens_total = opens_total;
     this.opens_left = opens_left;
     this.wait_time = wait_time;
-    this.open_time = open_time
+    this.open_time = open_time;
+    this.unblocked = false;
   }
 }
 
