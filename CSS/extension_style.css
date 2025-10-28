@@ -1,0 +1,83 @@
+/* Tranquil Tabs */
+:root {
+  --mint: #8CCF9A;
+  --vine: #387A46;
+}
+
+#blockPageBackground {
+    position: fixed;
+    background-color: #101212;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#blockPage_Body {
+    background-color: var(--vine);
+    width: 400px;
+    height: 250px;
+    flex-direction: column;
+    border-radius: 35px;
+
+    /* Flexbox to control child layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#unlock_button {
+    background-color: var(--mint);
+    color: var(--vine);
+    cursor:pointer;
+    width: 97%;
+    height: 20%;
+    border: none;
+    box-shadow: 6px, 10px, green;
+    flex-direction: flex-end;
+    margin-top: 20px;
+    border-radius: 25px;
+}
+
+#open_text {
+    color: var(--mint);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#group_name {
+    color: var(--mint);
+    font-size: 70px;
+    font-weight: 500;
+}
+
+/* .button {
+    
+    height: 30px;
+    box-sizing: border-box;
+    ;
+    font-size: 14px;
+    font-weight: 500; 
+} */
+
+.button:hover {
+    background-color: #6c9f77;
+}
+
+.button:active {
+    background-color: #4e7456;
+}
+
+/* Used for general text across the extension */
+.text {
+    font-family: Roboto, 'Open Sans', sans-serif;
+}

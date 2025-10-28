@@ -1,1 +1,5 @@
 - Daily Clock, add func for weekly opens too
+- Add support for time of day based restrictions
+- Add functionality for a empty open time(stay unlocked until window closed)
+- Popup tasks/games to keep you from settings
+- Prevent user from accessing options through right clicking
