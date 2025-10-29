@@ -80,6 +80,26 @@ async function findMatch() {
 //  Make Data Struct
 //
 ////////////////////////////
+class RestrictionGroup {
+    addRestriction(restriction) {
+        this.restrictions.append(restriction);
+    }
+
+    removeRestriction(restriction) {
+        var idx = this.restrictions.indexOf(restriction);    // <-- Not supported in <IE9
+        if (idx !== -1) {
+            this.restrictions.splice(idx, 1);
+        }
+    }
+
+    getRestrictions() {
+        return this.restrictions;
+    }
+
+
+}
+
+
 class Restriction {
   constructor(url_regex, opens_total, opens_left, wait_time) {
     this.url_regex = url_regex;
