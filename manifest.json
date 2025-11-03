@@ -13,8 +13,8 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "JavaScript/content_scripts.js"],
-            "css": ["CSS/extension_style.css"],
+            "js": [ "JavaScript/Restriction.js", "JavaScript/content_scripts.js"],
+            "css": [ "CSS/extension_style.css"],
             "type": "module"
         }
     ],

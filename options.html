@@ -6,41 +6,87 @@
   <title>Tranquil Options</title>
 </head>
 <body>
-    <!-- Table of Restricted URLS -->
-    <table id="restrictedURL_table">
-        <tr>
-            <th>URL</th>
-            <th>Opens</th>
-            <th>Wait Time</th>
-            <th>Open Time</th>
-        </tr>
-    </table>
+    <!-- Background -->
+    <div id="options_page_background">
+        <!-- Heading Section -->
+        <div id="groups_title_background">
+            <h1 id="groups_title">Groups</h1>
+        </div>
 
-    <br>
+        <!-- Button for creating a new group -->
+        <button id="new_group_button">+</button>
 
-    <!-- Form for adding restricted URLS -->
-    <div>
-        <form>
-            <label for="URL">URL:</label>
-            <input type="text" id="URL" placeholder="Website URL" name="URL">
-            <br>
+        <!-- Settings Button -->
+        <img src="Media/cog.png">
 
-            <label for="max_opens">Max Opens:</label>
-            <input type="number" id="max_opens" placeholder="4" name="max_opens">
-            <br>
+        <div id="options_page_bar" class="bar"></div>
 
-            <label for="wait_time">Max Opens:</label>
-            <input type="number" id="wait_time" placeholder="30" name="wait_time">
-            <br>
+        <div id="group_grid">
+            <!-- All restriction groups are displayed here -->
+        </div>
+    </div>
 
-            <label for="open_time">Max Opens:</label>
-            <input type="number" step=.01 id="open_time" placeholder="60" name="open_time">
-            <br>
+    <!-- Group Settings Popup -->
+    <div id="group_settings_background_outer">
+        <div id="group_settings_background_inner">
+            <form id="group_settings"> 
+                <!-- Group Name -->
+                <h1 id="settings_group_name">Group Name</h1>
+                <button type="submit">Save</button>
 
-            <button id="submit" type="submit">Submit</button>
-        </form>
-    </div> 
+                <div id="settings_bar_1" class="bar"></div>
+                <!-- Days of the Week -->
+                <div id="days_of_the_week">
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">Su</label>
+                    
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">M</label>
+
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">T</label>
+
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">W</label>
+
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">Th</label>
+
+                    <input type="checkbox" class="weekday_box">
+                    <label class="weekday">F</label>
+
+                    <input type="checkbox" class="weekday">
+                    <label class="weekday">S</label>
+                </div>
+
+                <label>Start Time</label>
+                <input id="start_time" type="time">
+
+                <label>End Time</label>
+                <input id="end_time" type="time">
+
+                <!-- TODO, implement 24h -->
+
+                <label>Pause Time</label>
+                <input id="pause_time" type="number">
+
+                <label>Open Time</label>
+                <input id="open_time" type="number">
+
+                <label>Opens</label>
+                <input id="opens" type="number">
+
+                <div id="settings_bar_2" class="bar"></div>
+
+                <h1 id="websites_title">Websites</h1>
+                <div id="websites">
+                    <!-- Websites go here -->
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Script File -->
     <script src="JavaScript/options.js"></script>
+    <script src="JavaScript/Restriction.js"></script>
 </body>

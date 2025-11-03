@@ -60,15 +60,6 @@
     font-weight: 500;
 }
 
-/* .button {
-    
-    height: 30px;
-    box-sizing: border-box;
-    ;
-    font-size: 14px;
-    font-weight: 500; 
-} */
-
 .button:hover {
     background-color: #6c9f77;
 }
@@ -80,4 +71,9 @@
 /* Used for general text across the extension */
 .text {
     font-family: Roboto, 'Open Sans', sans-serif;
+}
+
+
+#group_settings_background_outer {
+    visibility: hidden;
 }

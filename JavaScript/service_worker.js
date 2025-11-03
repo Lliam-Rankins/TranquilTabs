@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         //////////////////////
 
         // Make timer on timers page
-        chrome.runtime.sendMessage({action: "startTimer", restriction:request.restriction});
+        chrome.runtime.sendMessage({action: "startTimer", group:group});
     }
 
 
@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.action === 'timerFinished') {
         console.log("Timer Finished");
         // Post updated restriction
-        postRestriction(request.restriction);
+        Groups.postRestriction(group);
         
         
         const tabs = await chrome.tabs.query({});
