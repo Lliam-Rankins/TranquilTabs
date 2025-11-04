@@ -31,9 +31,6 @@ chrome.runtime.onMessage.addListener(async (response, sender) => {
 //
 ////////////////////////////
 async function init() {
-    // Get Current Restriction List
-    restriction_list = await Groups.getGroups();
-
     ////////////////////////////
     //
     //  Block Page
@@ -44,7 +41,10 @@ async function init() {
     group = await Groups.findMatch();
 
     // Found a match, block
-    if (group) {
+    if (group.length > 0) {
+        console.log("Match");
+        // TODO: add logic to check if active
+        group = group[0];
         //////////////////
         //  Make Block
         //////////////////

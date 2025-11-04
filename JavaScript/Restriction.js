@@ -4,14 +4,17 @@
  * @param 
  */
 class RestrictionGroup {
-    constructor(group_name, urls, priority, pause_time, open_time, start_time, end_time, opens_total, open_reset) {
+    constructor(group_name, id, urls, priority, pause_time, open_time, weekdays, start_time, end_time, opens_total, open_reset) {
         // Group Name
         this.group_name = group_name;
 
+        this.id = id;
+
         // Restrictions
-        this.urls = urls;
+        this.urls = urls || [];
         this.regex = [];
-        for (var i = 0; i < urls.length; i++) {
+
+        for (var i = 0; i < this.urls.length; i++) {
             // Covert to Regex and store
             var url = urls[i];
 
@@ -30,6 +33,7 @@ class RestrictionGroup {
         this.open_time = open_time;
 
         // Scheduling
+        this.weekdays = weekdays;
         this.start_time = start_time;
         this.end_time = end_time;
         this.open_reset = open_reset
@@ -60,16 +64,37 @@ class RestrictionGroup {
 }
 
 class Groups {
-    static async getGroups() {
-        let result = await chrome.storage.local.get("restriction_groups");
+    // Key for accessing restriction groups
+    static RESTRICTION_GROUPS_KEY = "restriction_groups";
+    
+    // Key for accessing next ID 
+    static ID_KEY = "Next_ID";
 
-        return result.restriction_groups || [];
+    // Gets the next id for a new restriction group
+    static async getNextID() {
+        // Get the next key, or nothing{ Set 0, if nothing }
+        let result = await chrome.storage.local.get(Groups.ID_KEY);
+
+        let key = parseInt(result[Groups.ID_KEY]) || 0;
+
+        // Increment and store for next key
+        let nextKey = key + 1
+        await chrome.storage.local.set({[Groups.ID_KEY] : nextKey});
+
+        return key;
+    }
+
+    // Returns the groups
+    static async getGroups() {
+        let result = await chrome.storage.local.get(Groups.RESTRICTION_GROUPS_KEY);
+
+        return result[Groups.RESTRICTION_GROUPS_KEY] || [];
     }
 
     // Save Groups
     static async postGroups(groups) {
         // Store URLS
-        await chrome.storage.local.set({"restriction_groups" : groups})
+        await chrome.storage.local.set({[Groups.RESTRICTION_GROUPS_KEY] : groups})
     }
 
     // Save Group
@@ -77,32 +102,63 @@ class Groups {
         // Retrive Groups
         let groups = await Groups.getGroups();
 
-        groups[]
-        // Store URLS
-        await chrome.storage.local.set({"restriction_groups" : groups})
-    }
+        // See if we have the group
+        let idx = groups.findIndex(g => g.id == group.id);
 
-    // Sorting comparitor for groups
-    sort(a, b) {
-        return a.priority - b.priority;
+        // Existing Group
+        if (idx != -1) {
+            groups[idx] = group;
+            console.log("Existing Group, updated");
+        }
+        // Group doesnt exist
+        else {
+            groups.push(group);
+            console.log("New Group, added");
+        }
+
+        // Store URLS
+        Groups.postGroups(groups);
     }
 
     // Finds the matched URL in given list of URLS
     static async findMatch() {
-        groups = Groups.getGroups();
+        let groups = await Groups.getGroups();
+
+        let matched_groups = [];
 
         // Look through groups
-        for (let i = 0; i < groups.length; i++) {
+        for (const group of groups) {
             // Look through regex websites
-            for (let j = 0; j < groups.regex.length; i++) {
-                // Found Match, stop searching
-                if (window.location.href.match(groups[i].regex[j])) {
-                    return true;
+            for (const regex of group.regex) {
+                // Found Match, add to matched groups
+                if (window.location.href.match(regex)) {
+                    matched_groups.push(group);
                 }
             }
-            
         }
 
-        return false;
+        if (matched_groups.length > 0)  return matched_groups;
+        else                            return null;
+    }
+
+    // Finds a match to given url
+    static async findMatch(url) {
+        let groups = await Groups.getGroups();
+
+        let matched_groups = [];
+
+        // Look through groups
+        for (const group of groups) {
+            // Look through regex websites
+            for (const regex of group.regex) {
+                // Found Match, add to matched groups
+                if (url.match(regex)) {
+                    matched_groups.push(group);
+                }
+            }
+        }
+
+        if (matched_groups.length > 0)  return matched_groups;
+        else                            return null;
     }
 }

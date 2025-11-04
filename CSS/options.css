@@ -1,0 +1,54 @@
+:root {
+  --mint: #8CCF9A;
+  --ivory: #FAF9F6;
+}
+
+.header {
+    display:flex;
+    flex-direction: row;
+}
+
+.bar {
+    width: auto;
+    height: 10px;
+    background-color: var(--ivory);
+    border-radius: 5px;
+
+    margin: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: x-large;
+}
+
+#options_page_background {
+    background-color: #D9D9D9;
+    width: 80vw;
+    min-height: 100vh;
+
+    justify-self: center;
+    /* position: absolute; */
+    top: 0;
+}
+
+#groups_title_background {
+    display: flex;
+    position: relative;
+    background-color: var(--mint);
+    width: 250px;
+    height: 70px;
+    border-radius: 50px;
+    align-items: center;
+}
+
+#group_settings_icon {
+    width: 70px;
+    height: auto;
+    padding-right: 5%;
+}
+
+#group_settings_background_outer {
+    visibility: visible;
+}

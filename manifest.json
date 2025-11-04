@@ -15,12 +15,13 @@
             "matches": [ "<all_urls>" ],
             "js": [ "JavaScript/Restriction.js", "JavaScript/content_scripts.js"],
             "css": [ "CSS/extension_style.css"],
-            "type": "module"
+            "type": "module",
+            "run_at": "document_start",
+            "world": "MAIN"
         }
     ],
     "background": {
-        "service_worker": "JavaScript/service_worker.js",
-        "type": "module"
+        "service_worker": "JavaScript/service_worker.js"
     },
     "options_ui": {
         "page": "options.html",

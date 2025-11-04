@@ -72,8 +72,3 @@
 .text {
     font-family: Roboto, 'Open Sans', sans-serif;
 }
-
-
-#group_settings_background_outer {
-    visibility: hidden;
-}

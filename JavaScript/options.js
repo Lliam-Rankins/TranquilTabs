@@ -11,7 +11,9 @@ var groups;
 //
 ////////////////////////////
 
-async function populateGroups(group_grid) {
+async function populateGroups() {
+    
+    
     // 
     for (var i = 0; i < groups.length; i++) {
         addGroup(groups[i]);
@@ -22,27 +24,21 @@ async function addGroup(group) {
 
 }
 
-async function addRow(table, Restriction) {
-  // Create Table Row
-  let newTableRow = document.createElement('tr');
-  table.append(newTableRow);
+function populateWebsites(websites) {
 
-  let newURL = document.createElement('td');
-  newURL.textContent = Restriction.url;
+}
 
-  let newOpenTot = document.createElement('td');
-  newOpenTot.textContent = Restriction.opens_total;
+// Adds a website to the Unorder List of websites
+function addWebsite(website_list, website) {
+    // TODO: needs to also add the relevant delete buttons
 
-  let newWait = document.createElement('td');
-  newWait.textContent = Restriction.wait_time;
+    // Create Element
+    const url = document.createElement("li");
+    url.textContent = website;
+    url.className = "website_text";
 
-  let newOpenTime = document.createElement('td');
-  newOpenTime.textContent = Restriction.open_time;
-
-  newTableRow.append(newURL);
-  newTableRow.append(newOpenTot);
-  newTableRow.append(newWait);
-  newTableRow.append(newOpenTime);
+    // Add element to list
+    website_list.append(url);
 }
 
 ////////////////////////////
@@ -50,41 +46,67 @@ async function addRow(table, Restriction) {
 //  Listeners
 //
 ////////////////////////////
-// const url_form = document.getElementById("URL");
-// const max_opens_form = document.getElementById("max_opens");
-// const wait_time_form = document.getElementById("wait_time");
-// const open_time_form = document.getElementById("open_time");
+const group_form = document.getElementById("group_settings");
 
-// document.getElementById("submit").addEventListener("click", function() {
-//     let url;
-//     let max_opens;
-//     let wait_time
-//     let open_time;
+/////////////////////
+//  Add new website
+/////////////////////
+document.getElementById("new_url_button").addEventListener("click", function() {
+    const new_url_request = document.getElementById("new_url").value;
 
-//     // Grab Url_form Value,  stored Raw, wiill interpret at RegEx later.
-//     url = url_form.value;
+    // Check value
+    if (new_url_request.length <= 0) return;
 
-//     // Empty Max Opens, set -1
-//     if (!max_opens_form.value) max_opens = -1;
-//     else max_opens = max_opens_form.value;
+    const websites_list = document.getElementById("websites");
 
-//     // Empty Wait_time, set -1
-//     if (!wait_time_form.value) wait_time = -1;
-//     else wait_time = wait_time_form.value;
+    addWebsite(websites_list, new_url_request);
+});
 
-//     // If constant blocking (wait_time = -1), open_time = -1
-//     if (!wait_time_form.value) open_time = -1;
-//     else open_time = open_time_form.value;
 
-//     // Make Restriction, store it
-//     let newRestriction = new Restriction(url, max_opens, max_opens, wait_time, open_time);
+/////////////////////
+//  Save Group
+/////////////////////
+document.getElementById("group_save_button").addEventListener("click", async function() {
+    // Prevent normal submission process
+    event.preventDefault();
+    
+    // Grab Data
+    const group_name = document.getElementById("settings_group_name").innerHTML;
 
-//     // Post Restriction
-//     postRestriction(newRestriction);
-//     restriction_list.push(url);
+    // Calculate what weekdays
+    const weekday_boxes = document.getElementsByClassName("weekday");
 
-//     addRow(restriction_table, newRestriction);
-// });
+    let weekdays = [];
+    for (const weekday of weekday_boxes) {
+        weekdays[i] = weekday.checked;
+    }
+
+    const start_time = document.getElementById("start_time").value;
+    const end_time = document.getElementById("end_time").value;
+
+    const pause_time = document.getElementById("pause_time").value;
+    const open_time = document.getElementById("open_time").value;
+
+    const opens = document.getElementById("opens").value;
+
+    // Grab all websites
+    let websites_list = document.getElementsByClassName("website_text");
+
+    let websites = [];
+    for (const website of websites_list) {
+        websites.push(website.innerHTML);
+    }
+
+
+    // Make new restriction
+    let id = await Groups.getNextID();
+    let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);
+
+    // Post Restriction Group
+    await Groups.postGroup(newRestrictionGroup);
+
+    // TODO: Add group to main list of groups
+});
 
 
 ////////////////////////////
@@ -97,15 +119,14 @@ async function init() {
     var group_grid = document.getElementById("group_grid");
     groups = await Groups.getGroups();
 
-    console.log(groups);
-
     // Groups, display them
     if (groups && groups.length > 0) {
+        console.log(groups);
         populateGroups(group_grid);
     }
     // No Groups, tell user to add some
     else {
-
+        console.log("No Groups");
     }
 }
 
