@@ -77,8 +77,8 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     const weekday_boxes = document.getElementsByClassName("weekday");
 
     let weekdays = [];
-    for (const weekday of weekday_boxes) {
-        weekdays[i] = weekday.checked;
+    for (let i = 0; i < weekday_boxes.length; i++) {
+        weekdays[i] = weekday_boxes[i].checked;
     }
 
     const start_time = document.getElementById("start_time").value;
@@ -97,13 +97,14 @@ document.getElementById("group_save_button").addEventListener("click", async fun
         websites.push(website.innerHTML);
     }
 
-
     // Make new restriction
     let id = await Groups.getNextID();
     let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);
 
     // Post Restriction Group
     await Groups.postGroup(newRestrictionGroup);
+
+    console.log(newRestrictionGroup);
 
     // TODO: Add group to main list of groups
 });

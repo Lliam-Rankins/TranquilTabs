@@ -14,16 +14,16 @@ class RestrictionGroup {
         this.urls = urls || [];
         this.regex = [];
 
-        for (var i = 0; i < this.urls.length; i++) {
-            // Covert to Regex and store
-            var url = urls[i];
 
-            url = url.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
-            url = url.replace(/\./g, '\\.');
+        for (const storedUrl of this.urls) {
+            // Covert to Regex and store
+            var url = storedUrl;
+
+            url = url.replace(/[-/\\^$+?{}()|[\]]/g, '\\$&');
             url = url.replace(/\*/g, '.*');
             url = '^' + url + '$';
             
-            this.regex.push(new RegExp(url));
+            this.regex.push(url);
         }
 
         // Restriction Settings 
@@ -39,7 +39,7 @@ class RestrictionGroup {
         this.open_reset = open_reset
 
         // Other
-        this.unblocked = false;
+        this.blocked = true;
         this.streak = 0;
         this.priority = priority;
     }
@@ -64,8 +64,9 @@ class RestrictionGroup {
 }
 
 class Groups {
-    // Key for accessing restriction groups
-    static RESTRICTION_GROUPS_KEY = "restriction_groups";
+    //////////////////////////
+    //  ID Handling
+    //////////////////////////
     
     // Key for accessing next ID 
     static ID_KEY = "Next_ID";
@@ -83,6 +84,14 @@ class Groups {
 
         return key;
     }
+
+
+    //////////////////////////
+    //  Group Handling
+    //////////////////////////
+
+    // Key for accessing restriction groups
+    static RESTRICTION_GROUPS_KEY = "restriction_groups";
 
     // Returns the groups
     static async getGroups() {
@@ -120,6 +129,10 @@ class Groups {
         Groups.postGroups(groups);
     }
 
+    //////////////////////////
+    //  Helper
+    //////////////////////////
+
     // Finds the matched URL in given list of URLS
     static async findMatch() {
         let groups = await Groups.getGroups();
@@ -128,37 +141,18 @@ class Groups {
 
         // Look through groups
         for (const group of groups) {
+            console.log(group);
             // Look through regex websites
             for (const regex of group.regex) {
+                console.log(new RegExp(regex));
                 // Found Match, add to matched groups
-                if (window.location.href.match(regex)) {
+                if (window.location.href.match(new RegExp(regex))) {
                     matched_groups.push(group);
+                    console.log("Matched");
                 }
             }
         }
 
-        if (matched_groups.length > 0)  return matched_groups;
-        else                            return null;
-    }
-
-    // Finds a match to given url
-    static async findMatch(url) {
-        let groups = await Groups.getGroups();
-
-        let matched_groups = [];
-
-        // Look through groups
-        for (const group of groups) {
-            // Look through regex websites
-            for (const regex of group.regex) {
-                // Found Match, add to matched groups
-                if (url.match(regex)) {
-                    matched_groups.push(group);
-                }
-            }
-        }
-
-        if (matched_groups.length > 0)  return matched_groups;
-        else                            return null;
+        return matched_groups;
     }
 }
