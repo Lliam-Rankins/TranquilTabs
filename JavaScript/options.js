@@ -20,11 +20,12 @@ async function populateGroups() {
     }
 }
 
+// Responsible for creating a group div
 async function addGroup(group) {
 
 }
 
-function populateWebsites(websites) {
+function populateUrls(urls) {
 
 }
 

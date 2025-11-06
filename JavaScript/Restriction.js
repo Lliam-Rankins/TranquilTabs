@@ -93,7 +93,14 @@ class RestrictionGroup {
     //  Timing
     //////////////////////////
     static async isActive(group) {
-        console.log(new Date(group.start_time));
+        // Get Current Time
+        const currTime =    new Date();
+        const startTime =   new Date("1970-01-01T" + group.start_time);
+        const endTime =     new Date("1970-01-01T" + group.end_time);
+
+        // If currTime is between start and end time, true
+        if (startTime < currTime && currTime < endTime) return true;
+        else return false;
     }
 }
 
