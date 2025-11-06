@@ -13,28 +13,20 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "JavaScript/Restriction.js", "JavaScript/content_scripts.js"],
-            "css": [ "CSS/extension_style.css"],
-            "type": "module"
+            "js": [ "JavaScript/Restriction.js", "JavaScript/Timer.js", "JavaScript/content_scripts.js"],
+            "css": [ "CSS/extension_style.css"]
         }
     ],
-    "background": {
-        "service_worker": "JavaScript/service_worker.js"
-    },
     "options_ui": {
         "page": "options.html",
         "open_in_tab": true
     },
 
     "permissions": [
-        "storage",
-        "offscreen"
+        "storage"
     ], 
 
-
-
     "action": {
-        "browser_style": true,
         "default_title": "Tranquil Tabs",
         "default_popup": "popup.html"
     },

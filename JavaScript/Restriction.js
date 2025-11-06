@@ -4,26 +4,33 @@
  * @param 
  */
 class RestrictionGroup {
+    /**
+     * Constructor for creating a Restriction Group, representing a collection of Urls and their
+     * associted restrictions and time frames.
+     * @param {*} group_name    String name of the group
+     * @param {*} id            Unique id of the group, due to volitility of name
+     * @param {*} urls          Plain text list of urls that are restricted
+     * @param {*} priority      Used for ranking which restriction is applied when 2+ groups are valid
+     * @param {*} pause_time    Seconds user must wait before getting access to a group
+     * @param {*} open_time     Minutes user is allowed to access the group
+     * @param {*} weekdays      What days of the week the group is valid
+     * @param {*} start_time    Time of the day when the restriction becomes active
+     * @param {*} end_time      Time of the day when the restriction becomes inactive
+     * @param {*} opens_total   Number of opens the user has in a given reset winow
+     * @param {*} open_reset    At what interval the user's opens reset, ie daily, weekly, bi-weekly or monthy
+     */
     constructor(group_name, id, urls, priority, pause_time, open_time, weekdays, start_time, end_time, opens_total, open_reset) {
         // Group Name
         this.group_name = group_name;
 
         this.id = id;
 
-        // Restrictions
+        // Restrictions and Regex (stored as a pattern)
         this.urls = urls || [];
         this.regex = [];
 
-
-        for (const storedUrl of this.urls) {
-            // Covert to Regex and store
-            var url = storedUrl;
-
-            url = url.replace(/[-/\\^$+?{}()|[\]]/g, '\\$&');
-            url = url.replace(/\*/g, '.*');
-            url = '^' + url + '$';
-            
-            this.regex.push(url);
+        for (const url of this.urls) {
+            this.regex.push(RestrictionGroup.urlToRegex(url));
         }
 
         // Restriction Settings 
@@ -45,21 +52,48 @@ class RestrictionGroup {
     }
 
     // Adds a restriction to the list
-    addRestriction(restriction) {
-        this.restrictions.push(restriction);
+    addUrl(url) {
+        // Adds Url
+        this.urls.push(url);
+
+        // Adds Regex Pattern
+        this.regex.push(RestrictionGroup.urlToRegex(url));
     }
 
     // Removes a restriction from the list
-    removeRestriction(restriction) {
-        var idx = this.restrictions.indexOf(restriction);
-        if (idx !== -1) {
-            this.restrictions.splice(idx, 1);
+    removeUrl(url) {
+        // Removes the Url
+        var urlIdx = this.urls.indexOf(url);
+        if (urlIdx != -1) {
+            this.urls.splice(urlIdx, 1);
+        }
+
+        // Removes Regex Pattern
+        var regexIdx = this.regex.indexOf(RestrictionGroup.urlToRegex(url));
+        if (regexIdx != -1) {
+            this.regex.splice(regexIdx, 1);
         }
     }
 
-    // Returns list of restrictions
-    getRestrictions() {
-        return this.restrictions;
+    // Returns list of url restrictions
+    getUrls() {
+        return this.urls;
+    }
+
+    // Translate Url string into a regex pattern
+    static urlToRegex(url) {
+        url = url.replace(/[-/\\^$+?{}()|[\]]/g, '\\$&');
+        url = url.replace(/\*/g, '.*');
+        url = '^' + url + '$';
+
+        return url;
+    }
+
+    //////////////////////////
+    //  Timing
+    //////////////////////////
+    static async isActive(group) {
+        console.log(new Date(group.start_time));
     }
 }
 
@@ -129,6 +163,7 @@ class Groups {
         Groups.postGroups(groups);
     }
 
+
     //////////////////////////
     //  Helper
     //////////////////////////
@@ -141,14 +176,11 @@ class Groups {
 
         // Look through groups
         for (const group of groups) {
-            console.log(group);
             // Look through regex websites
             for (const regex of group.regex) {
-                console.log(new RegExp(regex));
                 // Found Match, add to matched groups
                 if (window.location.href.match(new RegExp(regex))) {
                     matched_groups.push(group);
-                    console.log("Matched");
                 }
             }
         }
