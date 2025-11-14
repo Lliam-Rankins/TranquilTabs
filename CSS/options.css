@@ -1,6 +1,9 @@
+/* Page Wide */
 :root {
   --mint: #8CCF9A;
+  --sage: #4D5D53;
   --ivory: #FAF9F6;
+  --grey: #D9D9D9;
 }
 
 .header {
@@ -14,41 +17,141 @@
     background-color: var(--ivory);
     border-radius: 5px;
 
-    margin: 20px;
+    /* margin: 20px; */
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-h1 {
-    font-size: x-large;
+button {
+    box-shadow: 1px 1px;
+    border: none;
+    outline: none;
 }
 
-#options_page_background {
-    background-color: #D9D9D9;
+button:hover {
+    /* filter: saturate(1.5); */
+    box-shadow: 3px 3px ;
+    transform: translate(-3px, -3px);
+}
+
+button:active {
+    box-shadow: 2px 2px ;  
+    transform: translate(-2px, -2px);
+} 
+
+
+
+/* Containers */
+.sageContainer {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--sage);
+    border-radius: 20px;
+    padding: 5px;
+
+    margin-top: 5px;
+}
+
+.mintContainer {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--mint);
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+}
+
+
+
+/* Groups Page Specific */
+#groups_page_background {
+    background-color: var(--grey);
     width: 80vw;
-    min-height: 100vh;
-
+    height: 100vh;
+    padding: 10px;
+    margin-top: 0px;
     justify-self: center;
-    /* position: absolute; */
-    top: 0;
+
+    display:flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-#groups_title_background {
+#groups_title {
     display: flex;
     position: relative;
-    background-color: var(--mint);
-    width: 250px;
+    width: auto;
     height: 70px;
-    border-radius: 50px;
-    align-items: center;
+    border-radius: 30px;
+    font-size: xx-large;
+    color: var(--ivory);
+}
+
+#new_group_button {
+    align-self: center;
+    font-size: 64px;
+    /* color: var(--ivory); */
+}
+
+h1 {
+    font-size: xx-large;
+    color: var(--ivory);
+}
+
+#group_list {
+    /* height: 100vh; */
+    overflow-y: scroll;
+    max-height: 100%;
+    box-sizing: border-box;
+    border-radius: 20px;
 }
 
 #group_settings_icon {
     width: 70px;
-    height: auto;
-    padding-right: 5%;
+    aspect-ratio: 1/1;
+    margin-left: auto;
 }
 
-#group_settings_background_outer {
-    visibility: visible;
+
+/* Group CSS */
+.groupDaysDiv {
+    display: flex;
+    flex-direction: column;
+}
+
+.editIcon {
+    width :60px;
+    height: auto;
+}
+
+.streak {
+    font-size: 40px;
+    aspect-ratio: 1/1;
+    text-align: center;
+    /* align-self: center; */
+}
+
+.groupName {
+    margin: 0px;
+    color: var(--ivory);
+    font-size: 40px;
+}
+
+
+.upDown {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1/2;
+}
+
+.arrowImg {
+    width: 100%;
+}
+
+
+
+.group {
+    height: 150px;
+    margin-right: 5px;
 }

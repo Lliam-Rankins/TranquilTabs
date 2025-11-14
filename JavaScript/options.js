@@ -13,15 +13,117 @@ var groups;
 
 async function populateGroups() {
     
-    
-    // 
+    // For every group, add a group to the group list
     for (var i = 0; i < groups.length; i++) {
         addGroup(groups[i]);
     }
+
 }
 
 // Responsible for creating a group div
 async function addGroup(group) {
+    // TODO add alternative Text
+
+    ////////////////////
+    //  Group Creation
+    ////////////////////
+    let groupDiv = document.createElement('div');
+    groupDiv.className = "group sageContainer";
+
+    // Streaks
+    let streak = document.createElement('div');
+    streak.className = "streak mintContainer";
+    streak.innerHTML = group.streak + "<br>Days";
+
+
+    // Group Name
+    let groupName = document.createElement('p');
+    groupName.className = "groupName";
+    groupName.textContent = group.group_name;
+
+    // Group Name Bar
+    let groupNameBar = document.createElement('div');
+    groupNameBar.className = "bar";
+    
+    // Days
+    let dayDiv = document.createElement('div');
+    dayDiv.className = "dayDiv";
+
+    // TODO: add days
+
+    let groupDaysDiv = document.createElement('div');
+    groupDaysDiv.className = "groupDaysDiv";
+    groupDaysDiv.style.flexGrow = "2";
+    groupDaysDiv.append(groupName);
+    groupDaysDiv.append(groupNameBar);
+    groupDaysDiv.append(dayDiv);
+
+
+
+    // Time
+    let time = document.createElement('div');
+    time.className = "time mintContainer";
+    time.textContent = group.start_time + " : " + group.end_time;
+
+    // Edit Button
+    let editButton = document.createElement('button');
+    editButton.className = "divButton mintContainer";
+
+    let editIcon = document.createElement('img');
+    editIcon.className = "editIcon";
+    editIcon.src = "../Media/edit_pencil.png";
+    editButton.append(editIcon);
+
+    // Opens Left/Total
+    let opens = document.createElement('div');
+    opens.className = "opens mintContainer";
+    opens.textContent = group.opens_left + "/" + group.opens_total + " Opens";
+
+
+    let editOpensDiv = document.createElement('div');
+    editOpensDiv.style.display = "flex";
+    editOpensDiv.style.flexDirection = "row";
+    editOpensDiv.append(editButton);
+    editOpensDiv.append(opens);
+
+
+    let timeEditOpensDiv = document.createElement('div');
+    timeEditOpensDiv.className = "timeEditOpensDiv";
+    timeEditOpensDiv.append(time);
+    timeEditOpensDiv.append(editOpensDiv);
+
+
+    // Up and Down
+    let upButton = document.createElement('button');
+    upButton.className = "priorityButton mintContainer";
+
+    let upArrow = document.createElement('img');
+    upArrow.className = "arrowImg";
+    upArrow.src = "../Media/triangle.png";
+    upButton.append(upArrow);
+    
+    let downButton = document.createElement('button');
+    downButton.className = "priorityButton mintContainer";
+
+    let downArrow = document.createElement('img');
+    downArrow.className = "arrowImg";
+    downArrow.src = "../Media/triangle.png";
+    downArrow.style.transform = "scaleY(-1)";
+    downButton.append(downArrow);
+
+    let upDown = document.createElement('div');
+    upDown.className = "upDown";
+    upDown.append(upButton);
+    upDown.append(downButton);
+
+    groupDiv.append(streak);
+    groupDiv.append(groupDaysDiv);
+    groupDiv.append(timeEditOpensDiv);
+    groupDiv.append(upDown);
+
+    document.getElementById("group_list").append(groupDiv);
+
+    // Append Group Div
 
 }
 
