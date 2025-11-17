@@ -8,18 +8,18 @@
 </head>
 <body>
     <!-- Background -->
-    <div id="groups_page_background">
+    <div id="extension_page_background">
         <!-- Heading Section -->
          <div class="header">
-            <div id="groups_title" class="mintContainer">
-                Groups
-            </div>
+            <div id="groups_title" class="mintContainer">Groups</div>
 
             <!-- Button for creating a new group -->
-            <button id="new_group_button" class="mintContainer">+</button>
+            <button id="new_group_button" class="mintContainer" alt="New Group">+</button>
 
             <!-- Settings Button -->
-            <img id="group_settings_icon" src="Media/cog.png">
+            <button id="extension_settings_button" class="mintContainer" alt="Extension Settings">
+                <img id="extension_settings_icon" src="Media/cog.png">
+            </button>
         </div>
 
         <div id="options_page_bar" class="bar"></div>
@@ -30,8 +30,8 @@
     </div>
 
     <!-- Group Settings Popup -->
-    <div id="group_settings_background_outer">
-        <div id="group_settings_background_inner">
+    <div id="group_settings_background_outer" class="ivoryContainer">
+        <div id="group_settings_background_inner" class="mintContainer">
             <form id="group_settings"> 
                 <!-- Group Name -->
                 <h1 contenteditable id="settings_group_name">Group Name</h1>

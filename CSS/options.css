@@ -23,22 +23,21 @@
 }
 
 button {
-    box-shadow: 1px 1px;
+    filter: drop-shadow(1px 1px black);
+    transition: transform .25s, filter .25s;
+    cursor: pointer;
     border: none;
-    outline: none;
 }
 
 button:hover {
-    /* filter: saturate(1.5); */
-    box-shadow: 3px 3px ;
+    filter: drop-shadow(3px 3px black);
     transform: translate(-3px, -3px);
 }
 
 button:active {
-    box-shadow: 2px 2px ;  
+    filter: drop-shadow(2px 2px black);
     transform: translate(-2px, -2px);
-} 
-
+}
 
 
 /* Containers */
@@ -61,15 +60,28 @@ button:active {
     padding: 5px;
 }
 
+.ivoryContainer {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--ivory);
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+}
+
 
 
 /* Groups Page Specific */
-#groups_page_background {
+.header {
+    height: calc(10vh);
+}
+
+#extension_page_background {
     background-color: var(--grey);
-    width: 80vw;
+    width: min(700pt, 100vw);
     height: 100vh;
     padding: 10px;
-    margin-top: 0px;
+    margin-top: -10px;
     justify-self: center;
 
     display:flex;
@@ -79,24 +91,32 @@ button:active {
 
 #groups_title {
     display: flex;
-    position: relative;
-    width: auto;
-    height: 70px;
     border-radius: 30px;
-    font-size: xx-large;
+    align-self: center;
+    justify-self: center;
+    font-size: 6vh;
     color: var(--ivory);
 }
 
 #new_group_button {
     align-self: center;
-    font-size: 64px;
-    /* color: var(--ivory); */
+    font-size: 10vh;
+    color: var(--ivory);
+    line-height: 50%; 
 }
 
-h1 {
+#extension_settings_button {
+    display: flex;
+    height: 10vh;
+    align-self: center;
+    margin-left: auto;
+    border-radius: 30px;
+}
+
+/* h1 {
     font-size: xx-large;
     color: var(--ivory);
-}
+} */
 
 #group_list {
     /* height: 100vh; */
@@ -104,12 +124,6 @@ h1 {
     max-height: 100%;
     box-sizing: border-box;
     border-radius: 20px;
-}
-
-#group_settings_icon {
-    width: 70px;
-    aspect-ratio: 1/1;
-    margin-left: auto;
 }
 
 
@@ -139,9 +153,9 @@ h1 {
 
 
 .upDown {
-    height: 100%;
     display: flex;
     flex-direction: column;
+    flex-shrink: .5;
     aspect-ratio: 1/2;
 }
 
@@ -154,4 +168,14 @@ h1 {
 .group {
     height: 150px;
     margin-right: 5px;
+}
+
+
+/* Group Edit Page */
+#group_settings_background_outer {
+    display: flex;
+    /* position: absolute; */
+    align-self: center;
+    justify-items: center;
+    width: min(600px, 100vh);
 }
