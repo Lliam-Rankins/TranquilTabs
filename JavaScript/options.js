@@ -63,7 +63,7 @@ async function addGroup(group) {
     // Time
     let time = document.createElement('div');
     time.className = "time mintContainer";
-    time.textContent = group.start_time + " : " + group.end_time;
+    time.textContent = group.start_time + "-" + group.end_time;
 
     // Edit Button
     let editButton = document.createElement('button');
