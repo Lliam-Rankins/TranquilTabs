@@ -11,6 +11,18 @@ var groups;
 //
 ////////////////////////////
 
+function hideOptions() {
+    document.getElementById("group_settings_backdrop").style.display = "none";
+}
+ 
+function showEmptyOptions() {
+    document.getElementById("group_settings_backdrop").style.display = "flex";
+}
+
+function showOptions(group) {
+
+}
+
 async function populateGroups() {
     
     // For every group, add a group to the group list
@@ -22,19 +34,24 @@ async function populateGroups() {
 
 // Responsible for creating a group div
 async function addGroup(group) {
-    // TODO add alternative Text
-
-    ////////////////////
-    //  Group Creation
-    ////////////////////
     let groupDiv = document.createElement('div');
     groupDiv.className = "group sageContainer";
+
+
+    ////////////////////
+    //  Streak
+    ////////////////////
 
     // Streaks
     let streak = document.createElement('div');
     streak.className = "streak mintContainer";
     streak.innerHTML = group.streak + "<br>Days";
 
+
+
+    //////////////////////
+    //  Group Name/Days
+    //////////////////////
 
     // Group Name
     let groupName = document.createElement('p');
@@ -44,31 +61,73 @@ async function addGroup(group) {
     // Group Name Bar
     let groupNameBar = document.createElement('div');
     groupNameBar.className = "bar";
-    
+
     // Days
-    let dayDiv = document.createElement('div');
-    dayDiv.className = "dayDiv";
+    let days = document.createElement('div');
+    days.className = "days";
 
-    // TODO: add days
+    let daysOfTheWeek = ['M', 'T', 'W', 'Th', 'F', 'S', 'Su'];
+    console.log(group.weekdays.entries());
+    for (const [i, weekday] of group.weekdays.entries()) {
+        let day = document.createElement('div');
+        day.className = "mintContainer day ";
 
-    let groupDaysDiv = document.createElement('div');
-    groupDaysDiv.className = "groupDaysDiv";
-    groupDaysDiv.style.flexGrow = "2";
-    groupDaysDiv.append(groupName);
-    groupDaysDiv.append(groupNameBar);
-    groupDaysDiv.append(dayDiv);
+        // Active Day
+        if (weekday == true) {
+            day.className += "activeDay";
+        }
+        // Innactive Day
+        else {
+            day.className += "innactiveDay";
+        }
+
+        day.innerHTML = daysOfTheWeek[i];
+
+        days.append(day);
+    }
+
+    let groupNameDays = document.createElement('div');
+    groupNameDays.className = "groupNameDays";
+    groupNameDays.append(groupName);
+    groupNameDays.append(groupNameBar);
+    groupNameDays.append(days);
 
 
 
+    //////////////////////
+    //  Group Tools Top
+    //////////////////////
+    
     // Time
     let time = document.createElement('div');
     time.className = "time mintContainer";
-    time.textContent = group.start_time + "-" + group.end_time;
+    time.innerHTML = group.start_time + "<br>" + group.end_time;
+
+    // Up Button
+    let upButton = document.createElement('button');
+    upButton.className = "priorityButton mintContainer";
+
+    let upArrow = document.createElement('img');
+    upArrow.className = "arrowImg";
+    upArrow.src = "../Media/triangle.png";
+    upButton.append(upArrow);
+
+    let groupToolsTop = document.createElement('div');
+    groupToolsTop.className = "groupToolsTop";
+    groupToolsTop.append(time);
+    groupToolsTop.append(upButton);
+
+
+
+    ////////////////////////
+    //  Group Tools Bottom
+    ////////////////////////
 
     // Edit Button
     let editButton = document.createElement('button');
-    editButton.className = "divButton mintContainer";
+    editButton.className = "editButton mintContainer";
 
+    // Edit Icon
     let editIcon = document.createElement('img');
     editIcon.className = "editIcon";
     editIcon.src = "../Media/edit_pencil.png";
@@ -78,30 +137,8 @@ async function addGroup(group) {
     let opens = document.createElement('div');
     opens.className = "opens mintContainer";
     opens.textContent = group.opens_left + "/" + group.opens_total + " Opens";
-
-
-    let editOpensDiv = document.createElement('div');
-    editOpensDiv.style.display = "flex";
-    editOpensDiv.style.flexDirection = "row";
-    editOpensDiv.append(editButton);
-    editOpensDiv.append(opens);
-
-
-    let timeEditOpensDiv = document.createElement('div');
-    timeEditOpensDiv.className = "timeEditOpensDiv";
-    timeEditOpensDiv.append(time);
-    timeEditOpensDiv.append(editOpensDiv);
-
-
-    // Up and Down
-    let upButton = document.createElement('button');
-    upButton.className = "priorityButton mintContainer";
-
-    let upArrow = document.createElement('img');
-    upArrow.className = "arrowImg";
-    upArrow.src = "../Media/triangle.png";
-    upButton.append(upArrow);
     
+    // Down Button
     let downButton = document.createElement('button');
     downButton.className = "priorityButton mintContainer";
 
@@ -111,15 +148,27 @@ async function addGroup(group) {
     downArrow.style.transform = "scaleY(-1)";
     downButton.append(downArrow);
 
-    let upDown = document.createElement('div');
-    upDown.className = "upDown";
-    upDown.append(upButton);
-    upDown.append(downButton);
+    let groupToolsBottom = document.createElement('div');
+    groupToolsBottom.className = "groupToolsBottom";
+    groupToolsBottom.append(editButton);
+    groupToolsBottom.append(opens);
+    groupToolsBottom.append(downButton);
+
+
+
+    ////////////////////////
+    //  Group Appendation
+    ////////////////////////
+
+    // Group Tools
+    let groupTools = document.createElement('div');
+    groupTools.className = "groupTools";
+    groupTools.append(groupToolsTop);
+    groupTools.append(groupToolsBottom);
 
     groupDiv.append(streak);
-    groupDiv.append(groupDaysDiv);
-    groupDiv.append(timeEditOpensDiv);
-    groupDiv.append(upDown);
+    groupDiv.append(groupNameDays);
+    groupDiv.append(groupTools);
 
     document.getElementById("group_list").append(groupDiv);
 
@@ -232,6 +281,14 @@ async function init() {
     else {
         console.log("No Groups");
     }
+
+    // Add Click to options backdrop
+    document.getElementById("group_settings_backdrop").addEventListener("click", function(e) {
+        if (e.target == this) hideOptions();
+    });
+
+    // Add Click to new group backdrop
+    document.getElementById("new_group_button").addEventListener("click", showEmptyOptions);
 }
 
 

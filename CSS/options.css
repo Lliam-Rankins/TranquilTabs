@@ -1,4 +1,6 @@
-/* Page Wide */
+/*
+*   Page Wide
+*/
 :root {
   --mint: #8CCF9A;
   --sage: #4D5D53;
@@ -13,9 +15,6 @@
     border-radius: 5px;
 
     box-sizing: border-box;
-
-    /* margin-top: 10px;
-    margin-bottom: 10px; */
 }
 
 button {
@@ -36,15 +35,17 @@ button:active {
 }
 
 
-/* Containers */
+
+/*
+*   Containers
+*/
 .sageContainer {
     display: flex;
     flex-direction: row;
     background-color: var(--sage);
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 5px;
-
-    margin-top: 5px;
+    margin: 5px;
 }
 
 .mintContainer {
@@ -67,7 +68,9 @@ button:active {
 
 
 
-/* Groups Page Specific */
+/*
+*   Group Page
+*/
 .header {
     display:flex;
     flex-direction: row;
@@ -116,11 +119,6 @@ button:active {
     box-sizing: border-box;
 }
 
-/* h1 {
-    font-size: xx-large;
-    color: var(--ivory);
-} */
-
 #group_list {
     /* height: 100vh; */
     overflow-y: scroll;
@@ -130,10 +128,14 @@ button:active {
 }
 
 
-/* Group CSS */
-.groupDaysDiv {
+
+/*
+*   Group
+*/
+.groupNameDays {
     display: flex;
     flex-direction: column;
+    flex-grow: 2;
 }
 
 .editIcon {
@@ -160,16 +162,65 @@ button:active {
     font-size: min(40px, 6vh);
 }
 
+.days {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
 
+    height: 100%;
+}
 
-.timeEditOpensDiv {
+.day {
+    width: calc(1/7 * 100%);
+    aspect-ratio: 1/1;
+
+    font-size: calc(1vh + 1vw);
+    
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+}
+
+.activeDay {
+    background-color: var(--mint);
+}
+
+.innactiveDay {
+    background-color: var(--grey);
+}
+
+.groupToolsTop {
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.groupToolsBottom {
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.groupTools {
     display: flex;
     flex-direction: column;
+
+    height: 100%;
 }
 
 .time {
-    height: 50%;
-    font-size: min(4vh, 30px);
+    height: auto;
+    font-size: min(2vh, 30px);
+}
+
+.opens {
+    flex-grow: 2;
 }
 
 
@@ -192,12 +243,30 @@ button:active {
 }
 
 
-/* Group Edit Page */
+
+/*
+*   Group Edit/New Group
+*/
+
+#group_settings_backdrop {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 4;
+    background-color: rgba(16, 18, 18, .8);
+    position: fixed;
+
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+
+}
+
 #group_settings_background_outer {
     z-index: 5;
     display: flex;
-    /* position: absolute; */
-    align-self: center;
-    justify-items: center;
     width: min(600px, 100vh);
 }
