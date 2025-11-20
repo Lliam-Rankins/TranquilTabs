@@ -3,7 +3,7 @@
 //  Global Variables
 //
 ////////////////////////////
-var groups;
+// var groups;
 
 ////////////////////////////
 //
@@ -16,26 +16,102 @@ function hideOptions() {
 }
  
 function showEmptyOptions() {
+    // Add Group ID to save button
+    document.getElementById('group_save_button').setAttribute("data-edit-id", '');
+
+    // Group Name
+    document.getElementById('settings_group_name').innerHTML = "Group Name";
+
+    // Days of the Week
+    document.getElementById('sunday').checked = false;
+    document.getElementById('monday').checked = false;
+    document.getElementById('tuesday').checked = false;
+    document.getElementById('wednesday').checked = false;
+    document.getElementById('thursday').checked = false;
+    document.getElementById('friday').checked = false;
+    document.getElementById('saturday').checked = false;
+
+    document.getElementById('start_time').value = '';
+    document.getElementById('end_time').value = '';
+
+    document.getElementById('pause_time').value = '';
+    document.getElementById('open_time').value = '';
+
+    document.getElementById('opens').value = '';
+
+    // Clear Websites
+    let website_list = document.getElementById('websites');
+    website_list.innerHTML = '';
+
     document.getElementById("group_settings_backdrop").style.display = "flex";
 }
 
 function showOptions(group) {
+    // Add Group ID to save button
+    document.getElementById('group_save_button').setAttribute("data-edit-id", group.id);
 
+    console.log(group);
+
+    // Group Name
+    document.getElementById('settings_group_name').innerHTML = group.group_name;
+
+    // Days of the Week
+    document.getElementById('sunday').checked = group.weekdays[0];
+    document.getElementById('monday').checked = group.weekdays[1];
+    document.getElementById('tuesday').checked = group.weekdays[2];
+    document.getElementById('wednesday').checked = group.weekdays[3];
+    document.getElementById('thursday').checked = group.weekdays[4];
+    document.getElementById('friday').checked = group.weekdays[5];
+    document.getElementById('saturday').checked = group.weekdays[6];
+
+    document.getElementById('start_time').value = group.start_time;
+    document.getElementById('end_time').value = group.end_time;
+
+    document.getElementById('pause_time').value = group.pause_time;
+    document.getElementById('open_time').value = group.open_time;
+
+    document.getElementById('opens').value = group.opens_total;
+
+    populateWebsites(group.urls);
+
+    document.getElementById("group_settings_backdrop").style.display = "flex";
 }
 
-async function populateGroups() {
-    
+function populateWebsites(websites) {
+    let website_list = document.getElementById('websites');
+    website_list.innerHTML = '';
+
+    for (let website of websites) {
+        addWebsite(website_list, website);
+    }
+}
+
+// Adds a website to the Unorder List of websites
+function addWebsite(website_list, website) {
+    // TODO: needs to also add the relevant delete buttons
+
+    // Create Element
+    const url = document.createElement("li");
+    url.textContent = website;
+    url.className = "website_text";
+
+    // Add element to list
+    website_list.append(url);
+}
+async function populateGroups() { 
     // For every group, add a group to the group list
+    let groups = await Groups.getGroups();
+
     for (var i = 0; i < groups.length; i++) {
         addGroup(groups[i]);
     }
-
 }
 
 // Responsible for creating a group div
 async function addGroup(group) {
     let groupDiv = document.createElement('div');
     groupDiv.className = "group sageContainer";
+    groupDiv.setAttribute('data-group-id', group.id);
 
 
     ////////////////////
@@ -66,7 +142,7 @@ async function addGroup(group) {
     let days = document.createElement('div');
     days.className = "days";
 
-    let daysOfTheWeek = ['M', 'T', 'W', 'Th', 'F', 'S', 'Su'];
+    let daysOfTheWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'S'];
     console.log(group.weekdays.entries());
     for (const [i, weekday] of group.weekdays.entries()) {
         let day = document.createElement('div');
@@ -127,6 +203,24 @@ async function addGroup(group) {
     let editButton = document.createElement('button');
     editButton.className = "editButton mintContainer";
 
+    // On Click functionality
+    editButton.addEventListener("click", async function(e) {
+        let group_elements = document.querySelectorAll("div[data-groupID]");
+
+        // Find relevant group by iterating up
+        let target = e.target;
+        while(!target.hasAttribute('data-group-id')) {
+            target = target.parentElement;
+        }
+
+        console.log(target);
+
+        let group = await Groups.getGroup(target.getAttribute('data-group-id'));
+        console.log(group);
+
+        showOptions(group);
+    })
+
     // Edit Icon
     let editIcon = document.createElement('img');
     editIcon.className = "editIcon";
@@ -176,22 +270,7 @@ async function addGroup(group) {
 
 }
 
-function populateUrls(urls) {
 
-}
-
-// Adds a website to the Unorder List of websites
-function addWebsite(website_list, website) {
-    // TODO: needs to also add the relevant delete buttons
-
-    // Create Element
-    const url = document.createElement("li");
-    url.textContent = website;
-    url.className = "website_text";
-
-    // Add element to list
-    website_list.append(url);
-}
 
 ////////////////////////////
 //
@@ -249,16 +328,24 @@ document.getElementById("group_save_button").addEventListener("click", async fun
         websites.push(website.innerHTML);
     }
 
+    // Check if there is an ID or not
+    let id = document.getElementById("group_save_button").getAttribute("data-edit-id");
+    if (id == '') id = await Groups.getNextID();
+
+    console.log(id);
+
     // Make new restriction
-    let id = await Groups.getNextID();
     let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);
 
     // Post Restriction Group
     await Groups.postGroup(newRestrictionGroup);
 
-    console.log(newRestrictionGroup);
+    // Delete group list, repopulate
+    document.getElementById('group_list').innerHTML = '';
+    await populateGroups();
 
-    // TODO: Add group to main list of groups
+    // Hide settings page
+    document.getElementById("group_settings_backdrop").style.display = 'none';
 });
 
 

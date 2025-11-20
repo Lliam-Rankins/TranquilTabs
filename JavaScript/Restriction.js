@@ -24,6 +24,8 @@ class RestrictionGroup {
         this.group_name = group_name;
 
         this.id = id;
+        if (priority)   this.priority = id;
+        else            this.priority = priority;
 
         // Restrictions and Regex (stored as a pattern)
         this.urls = urls || [];
@@ -139,6 +141,22 @@ class Groups {
         let result = await chrome.storage.local.get(Groups.RESTRICTION_GROUPS_KEY);
 
         return result[Groups.RESTRICTION_GROUPS_KEY] || [];
+    }
+
+    // Returns Specific group based on id
+    static async getGroup(id) {
+        const groups = await Groups.getGroups();
+
+        let result = null;
+        for (let group of groups) {
+            if (group.id == id) {
+                result = group;
+                break;
+            }
+        }
+
+        
+        return result;
     }
 
     // Save Groups
