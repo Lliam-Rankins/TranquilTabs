@@ -16,15 +16,15 @@ class Timer {
      */
     static async startTimer(group, timerType) {
         // Start Pause Timer
-        if (timerType == TimerType.Pause) {
+        if (timerType == Timer.TimerType.Pause) {
             console.log("Starting Pause Timer");
-            setTimeout(endTimer, group.pause_time * 1000, group, timerType);
+            setTimeout(() => Timer.endTimer(group, timerType), group.pause_time * 1000);
         }
 
         // Start Open Timer
-        else if (timerType == TimerType.Open) {
+        else if (timerType == Timer.TimerType.Open) {
             console.log("Starting Open Timer");
-            setTimeout(endTimer, group.open_time * 60000, group, timerType);
+            setTimeout(() => Timer.endTimer(group, timerType), group.open_time * 60000);
         }
     }
 
@@ -36,18 +36,19 @@ class Timer {
      */
     static async endTimer(group, timerType) {
         // End Pause Timer, Unblock
-        if (timerType == TimerType.Pause) {
+        if (timerType == Timer.TimerType.Pause) {
             // Unblock Logic
-            unblock(group);
+            Timer.unblock(group);
             
             // Start Open Timer
-            startTimer(group, TimerType.Open);
+            Timer.startTimer(group, Timer.TimerType.Open);
         }
 
         // End Open Timer, Block
-        else if (timerType == TimerType.Open) {
+        else if (timerType == Timer.TimerType.Open) {
+            console.log("Ending Timer");
             // Block
-            block(group);
+            Timer.block(group);
         }
     }
 
@@ -72,6 +73,7 @@ class Timer {
      * @param {*} group The group that will be blocked
      */
     static async block(group) {
+        console.log(block);
         // Block Group
         group.blocked = true;
 

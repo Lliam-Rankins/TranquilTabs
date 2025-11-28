@@ -18,12 +18,9 @@
     justify-content: center;
 }
 
-#blockPage_Body {
-    background-color: var(--vine);
-    width: 400px;
-    height: 250px;
+#block_Body {
     flex-direction: column;
-    border-radius: 35px;
+    max-width: 33%;
 
     /* Flexbox to control child layout */
     display: flex;
@@ -31,8 +28,13 @@
     justify-content: center;
 
     justify-content: space-between;
+    align-content: center;
     padding: 10px;
     box-sizing: border-box;
+}
+
+#group_name {
+    text-align: center;
 }
 
 #unlock_button {
@@ -46,6 +48,10 @@
     flex-direction: flex-end;
     margin-top: 20px;
     border-radius: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #open_text {
@@ -58,14 +64,6 @@
     color: var(--mint);
     font-size: 70px;
     font-weight: 500;
-}
-
-.button:hover {
-    background-color: #6c9f77;
-}
-
-.button:active {
-    background-color: #4e7456;
 }
 
 /* Used for general text across the extension */

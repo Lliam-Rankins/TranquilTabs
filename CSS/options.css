@@ -270,6 +270,49 @@ button:active {
 #group_settings_background_outer {
     z-index: 5;
     display: flex;
-    width: min(600px, 100vh);
     color: var(--ivory);
+}
+
+#group_edit_header {
+    display: flex;
+    flex-direction: row;
+
+    margin: 5px;
+}
+
+#edit_body {
+    display: flex;
+    flex-direction: row;
+}
+
+#edit_left {
+    display: flex;
+    flex-direction: column;
+
+    margin: 5px;
+}
+
+#edit_right {
+    display:flex;
+    flex-direction: column;
+
+    margin:5px;
+}
+
+#group_save_button {
+    margin-left: auto;
+}
+
+#days_of_the_week {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.weekday_label {
+    text-align: center;
+}
+
+.weekday {
+    border-radius: 25%;
 }

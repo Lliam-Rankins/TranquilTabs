@@ -16,11 +16,16 @@ function hideOptions() {
 }
  
 function showEmptyOptions() {
+    // Reset Error Message
+    let errorMessage = document.getElementById("group_settings_error_message");
+    errorMessage.innerHTML = "";
+    errorMessage.style.visibility = "hidden";
+
     // Add Group ID to save button
     document.getElementById('group_save_button').setAttribute("data-edit-id", '');
 
     // Group Name
-    document.getElementById('settings_group_name').innerHTML = "Group Name";
+    document.getElementById('settings_group_name').innerHTML = "Click Me";
 
     // Days of the Week
     document.getElementById('sunday').checked = false;
@@ -47,6 +52,11 @@ function showEmptyOptions() {
 }
 
 function showOptions(group) {
+    // Reset Error Message
+    let errorMessage = document.getElementById("group_settings_error_message");
+    errorMessage.innerHTML = "";
+    errorMessage.style.visibility = "hidden";
+
     // Add Group ID to save button
     document.getElementById('group_save_button').setAttribute("data-edit-id", group.id);
 
@@ -98,13 +108,23 @@ function addWebsite(website_list, website) {
     // Add element to list
     website_list.append(url);
 }
+
 async function populateGroups() { 
     // For every group, add a group to the group list
     let groups = await Groups.getGroups();
 
+    // Sort Groups
+    groups.sort((a, b) => b.priority - a.priority);
+
     for (var i = 0; i < groups.length; i++) {
         addGroup(groups[i]);
     }
+}
+
+async function repopulateGroups() { 
+    // Delete group list, repopulate
+    document.getElementById('group_list').innerHTML = '';
+    await populateGroups();
 }
 
 // Responsible for creating a group div
@@ -203,24 +223,6 @@ async function addGroup(group) {
     let editButton = document.createElement('button');
     editButton.className = "editButton mintContainer";
 
-    // On Click functionality
-    editButton.addEventListener("click", async function(e) {
-        let group_elements = document.querySelectorAll("div[data-groupID]");
-
-        // Find relevant group by iterating up
-        let target = e.target;
-        while(!target.hasAttribute('data-group-id')) {
-            target = target.parentElement;
-        }
-
-        console.log(target);
-
-        let group = await Groups.getGroup(target.getAttribute('data-group-id'));
-        console.log(group);
-
-        showOptions(group);
-    })
-
     // Edit Icon
     let editIcon = document.createElement('img');
     editIcon.className = "editIcon";
@@ -247,8 +249,61 @@ async function addGroup(group) {
     groupToolsBottom.append(editButton);
     groupToolsBottom.append(opens);
     groupToolsBottom.append(downButton);
+    
 
 
+    ////////////////////////////
+    //  Button Functionality
+    ////////////////////////////
+    
+    // Edit Button
+    editButton.addEventListener("click", async function(e) {
+        let group_elements = document.querySelectorAll("div[data-groupID]");
+
+        // Find relevant group by iterating up
+        let target = e.target;
+        while(!target.hasAttribute('data-group-id')) {
+            target = target.parentElement;
+        }
+
+        let group = await Groups.getGroup(target.getAttribute('data-group-id'));
+
+        showOptions(group);
+    })
+
+    // Lower Priority 
+    downButton.addEventListener("click", async function(e) {
+        let group_elements = document.querySelectorAll("div[data-groupID]");
+
+        // Find relevant group by iterating up
+        let target = e.target;
+        while(!target.hasAttribute('data-group-id')) {
+            target = target.parentElement;
+        }
+
+        let group = await Groups.getGroup(target.getAttribute('data-group-id'));
+
+        await Groups.swapLower(group);
+
+        await repopulateGroups();
+    })   
+
+    // Raise Priority
+    upButton.addEventListener("click", async function(e) {
+        let group_elements = document.querySelectorAll("div[data-groupID]");
+
+        // Find relevant group by iterating up
+        let target = e.target;
+        while(!target.hasAttribute('data-group-id')) {
+            target = target.parentElement;
+        }
+
+        let group = await Groups.getGroup(target.getAttribute('data-group-id'));
+
+        await Groups.swapHigher(group);
+
+        await repopulateGroups();
+    })
 
     ////////////////////////
     //  Group Appendation
@@ -298,6 +353,11 @@ document.getElementById("new_url_button").addEventListener("click", function() {
 //  Save Group
 /////////////////////
 document.getElementById("group_save_button").addEventListener("click", async function() {
+    // Reset Error Message
+    let errorMessage = document.getElementById("group_settings_error_message");
+    errorMessage.innerHTML = "";
+    errorMessage.style.visibility = "hidden";
+
     // Prevent normal submission process
     event.preventDefault();
     
@@ -315,10 +375,27 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     const start_time = document.getElementById("start_time").value;
     const end_time = document.getElementById("end_time").value;
 
-    const pause_time = document.getElementById("pause_time").value;
-    const open_time = document.getElementById("open_time").value;
+    // If no start time or end time
+    if (start_time == '' || end_time == '') {
+        errorMessage.innerHTML = "Start or end time missing.";
+        errorMessage.style.visibility = "visible";
+        return;
+    }
+
+    let pause_time = document.getElementById("pause_time").value;
+    let open_time = document.getElementById("open_time").value;
+
+    // If no pause time, assume 0s
+    if (pause_time == '') pause_time = 0;
 
     const opens = document.getElementById("opens").value;
+
+    // If pause/open time or opens are < 0, error
+    if (pause_time < 0 || open_time < 0 || opens < 0) {
+        errorMessage.innerHTML = "Negative values are not valid.";
+        errorMessage.style.visibility = "visible";
+        return;
+    }
 
     // Grab all websites
     let websites_list = document.getElementsByClassName("website_text");
@@ -326,6 +403,12 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     let websites = [];
     for (const website of websites_list) {
         websites.push(website.innerHTML);
+    }
+
+    if (websites.length < 1) {
+        errorMessage.innerHTML = "Must have at least one website.";
+        errorMessage.style.visibility = "visible";
+        return;
     }
 
     // Check if there is an ID or not
@@ -336,13 +419,12 @@ document.getElementById("group_save_button").addEventListener("click", async fun
 
     // Make new restriction
     let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);
+    console.log(newRestrictionGroup);
 
     // Post Restriction Group
     await Groups.postGroup(newRestrictionGroup);
 
-    // Delete group list, repopulate
-    document.getElementById('group_list').innerHTML = '';
-    await populateGroups();
+    await repopulateGroups();
 
     // Hide settings page
     document.getElementById("group_settings_backdrop").style.display = 'none';

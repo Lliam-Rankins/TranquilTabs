@@ -35,57 +35,90 @@
             <div id="group_settings_background_inner" class="sageContainer">
                 <form id="group_settings"> 
                     <!-- Group Name -->
-                    <h1 contenteditable id="settings_group_name">Group Name</h1>
-                    
-                    <div class="bar"></div>
+                    <div id="group_edit_header">
+                        <h1 contenteditable id="settings_group_name">Group Name</h1>
+                        <button id="group_save_button" data-edit-id="">Save</button>
+                    </div>
 
-                    <button id="group_save_button" data-edit-id="">Save</button>
+                    <!-- Error Message -->
+                    <p id="group_settings_error_message"></p>
 
                     <div id="settings_bar_1" class="bar"></div>
                     <!-- Days of the Week -->
-                    <div id="days_of_the_week">
-                        <input id="sunday" type="checkbox" class="weekday">Su
-                        
-                        <input id="monday" type="checkbox" class="weekday">M
-                        
-                        <input id="tuesday" type="checkbox" class="weekday">T
+                    <div id="group_edit_body">
+                        <div id="days_of_the_week">
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="sunday" type="checkbox" class="weekday" value="sunday">
+                                <label class="weekday_label" for="sunday">Su</label>
+                            </div>
+                            
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="monday" type="checkbox" class="weekday" value="monday">
+                                <label class="weekday_label" for="monday">M</label>
+                            </div>
+                            
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="tuesday" type="checkbox" class="weekday" value="tuesday">
+                                <label class="weekday_label" for="tuesday">T</label>
+                            </div>
 
-                        <input id="wednesday" type="checkbox" class="weekday">W
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="wednesday" type="checkbox" class="weekday" value="wednesday">
+                                <label class="weekday_label" for="wednesday">W</label>
+                            </div>
 
-                        <input id="thursday" type="checkbox" class="weekday">Th
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="thursday" type="checkbox" class="weekday" value="thursday">
+                                <label class="weekday_label" for="thursday">Th</label>
+                            </div>
 
-                        <input id="friday" type="checkbox" class="weekday">F
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="friday" type="checkbox" class="weekday" value="friday">
+                                <label class="weekday_label" for="friday">F</label>
+                            </div>
 
-                        <input id="saturday" type="checkbox" class="weekday">S
+                            <div style="display:flex; flex-direction: column;">
+                                <input id="saturday" type="checkbox" class="weekday" value="saturday">
+                                <label class="weekday_label" for="saturday">Su</label>
+                            </div>
+                        </div>
+
+                        <div id="edit_body">
+                            <div id="edit_left">
+                                <label>Start Time</label>
+                                <input id="start_time" type="time">
+
+                                <label>Pause Time</label>
+                                <input id="pause_time" type="number">
+
+                                <label>Opens</label>
+                                <input id="opens" type="number">
+                            </div>
+
+                            <div id="edit_right">
+                                <label>End Time</label>
+                                <input id="end_time" type="time">
+
+                                <label>Open Time</label>
+                                <input id="open_time" type="number">
+                            </div>
+                        </div>
                     </div>
-
-                    <label>Start Time</label>
-                    <input id="start_time" type="time">
-
-                    <label>End Time</label>
-                    <input id="end_time" type="time">
-
-                    <!-- TODO, implement 24h -->
-
-                    <label>Pause Time</label>
-                    <input id="pause_time" type="number">
-
-                    <label>Open Time</label>
-                    <input id="open_time" type="number">
-
-                    <label>Opens</label>
-                    <input id="opens" type="number">
 
                     <div id="settings_bar_2" class="bar"></div>
 
-                    <h1 id="websites_title">Websites</h1>
-                    <input type="text" id="new_url">
-                    <button type="button" id="new_url_button">Save</button>
-
-                    <ul id="websites">
-                        <!-- Websites go here, Delete button here(Lil trashcan) -->
+                    <div id="group_edit_websites">
                         
-                    </ul>
+
+                        <h1 id="websites_title">Websites</h1>
+                        <input type="text" id="new_url">
+                        <button type="button" id="new_url_button">Save</button>
+
+                        <ul id="websites">
+                            <!-- Websites go here, Delete button here(Lil trashcan) -->
+                            
+                        </ul>
+                    </div>
                 </form>
             </div>
         </div>

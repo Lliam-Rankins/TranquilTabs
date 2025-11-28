@@ -24,8 +24,7 @@ class RestrictionGroup {
         this.group_name = group_name;
 
         this.id = id;
-        if (priority)   this.priority = id;
-        else            this.priority = priority;
+        this.priority = (priority == undefined || priority == null) ? this.id : priority;
 
         // Restrictions and Regex (stored as a pattern)
         this.urls = urls || [];
@@ -50,7 +49,6 @@ class RestrictionGroup {
         // Other
         this.blocked = true;
         this.streak = 0;
-        this.priority = priority;
     }
 
     // Adds a restriction to the list
@@ -94,11 +92,20 @@ class RestrictionGroup {
     //////////////////////////
     //  Timing
     //////////////////////////
-    static async isActive(group) {
+    static dateToMillis(date) {
+        return  date.getHours() * 3600000 +
+                date.getMinutes() * 60000 +
+                date.getSeconds() * 1000 +
+                date.getMilliseconds()
+    }
+
+    static isActive(group) {
         // Get Current Time
-        const currTime =    new Date();
-        const startTime =   new Date("1970-01-01T" + group.start_time);
-        const endTime =     new Date("1970-01-01T" + group.end_time);
+        const currTime =    this.dateToMillis(new Date());
+        const startTime =   this.dateToMillis(new Date("1970-01-01T" + group.start_time));
+        const endTime =     this.dateToMillis(new Date("1970-01-01T" + group.end_time));
+
+        console.log(startTime + " : " + currTime + " : " + endTime);
 
         // If currTime is between start and end time, true
         if (startTime < currTime && currTime < endTime) return true;
@@ -114,18 +121,25 @@ class Groups {
     // Key for accessing next ID 
     static ID_KEY = "Next_ID";
 
-    // Gets the next id for a new restriction group
+    // Gets the next id for a new restriction group, and stores 1 higher
     static async getNextID() {
         // Get the next key, or nothing{ Set 0, if nothing }
         let result = await chrome.storage.local.get(Groups.ID_KEY);
 
-        let key = parseInt(result[Groups.ID_KEY]) || 0;
+        let key = parseInt(result[Groups.ID_KEY]) || 1;
 
         // Increment and store for next key
         let nextKey = key + 1
         await chrome.storage.local.set({[Groups.ID_KEY] : nextKey});
 
         return key;
+    }
+
+    // Returns the next key id
+    static async peekNextID() {
+        let result = await chrome.storage.local.get(Groups.ID_KEY);
+
+        return parseInt(result[Groups.ID_KEY]) || 1;
     }
 
 
@@ -211,5 +225,63 @@ class Groups {
         }
 
         return matched_groups;
+    }
+
+
+    // Find next highest priority and swap with given group
+    static async swapHigher(restrictionGroup) {
+        let groups = await Groups.getGroups();
+        let nextHighestPriority = Infinity;
+        let nextHighest = null;
+
+        // Find next highest priority group
+        for (const group of groups) {
+            // Found a higher priority
+            // Canidate priority is greater than the passed in's, while also less than highest found so far
+            if (group.priority > restrictionGroup.priority && group.priority < nextHighestPriority) {
+                nextHighestPriority = group.priority;
+                nextHighest = group;
+            }
+        }
+
+
+        // Swap their prioritys, post both groups
+        if (nextHighest != null) {
+            nextHighest.priority = restrictionGroup.priority;
+            restrictionGroup.priority = nextHighestPriority;
+
+            console.log(nextHighest.priority);
+            console.log(restrictionGroup.priority)
+
+            await Groups.postGroup(nextHighest);
+            await Groups.postGroup(restrictionGroup);
+        }   
+    }
+
+    // Find next lowest priority and swap with given group
+    static async swapLower(restrictionGroup) {
+        let groups = await Groups.getGroups();
+        let nextLowestPriority = -Infinity;
+        let nextLowest = null;
+
+        // Find next lowest priority group
+        for (const group of groups) {
+            // Found a lower priority
+            // Canidate priority is less than the passed in's, while also greater than lowest found so far
+            if (group.priority < restrictionGroup.priority && group.priority > nextLowestPriority) {
+                nextLowestPriority = group.priority;
+                nextLowest = group;
+            }
+        }
+
+
+        // Swap their prioritys, post both groups
+        if (nextLowest != null) {
+            nextLowest.priority = restrictionGroup.priority;
+            restrictionGroup.priority = nextLowestPriority;
+
+            await Groups.postGroup(nextLowest);
+            await Groups.postGroup(restrictionGroup);
+        }   
     }
 }
