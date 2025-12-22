@@ -202,6 +202,24 @@ class Groups {
         Groups.postGroups(groups);
     }
 
+    // Delete Group
+    static async removeGroup(id) {
+        // Retrive Groups
+        let groups = await Groups.getGroups();
+
+        // See if we have the group
+        let idx = groups.findIndex(g => g.id == id);
+
+        // Existing Group
+        if (idx == -1) return;
+
+        groups.splice(idx, 1);
+        console.log("Removed Group");
+
+        // Store Groups
+        Groups.postGroups(groups);
+    }
+
 
     //////////////////////////
     //  Helper

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="CSS/extension.css">
   <link rel="stylesheet" href="CSS/options.css">
   <title>Tranquil Options</title>
 </head>
@@ -37,7 +38,8 @@
                     <!-- Group Name -->
                     <div id="group_edit_header">
                         <h1 contenteditable id="settings_group_name">Group Name</h1>
-                        <button id="group_save_button" data-edit-id="">Save</button>
+                        <button id="group_save_button" class="mintContainer" data-edit-id="">Save</button>
+                        <button id="group_delete_button" class="mintContainer">Delete</button>
                     </div>
 
                     <!-- Error Message -->
@@ -111,8 +113,11 @@
                         
 
                         <h1 id="websites_title">Websites</h1>
-                        <input type="text" id="new_url">
-                        <button type="button" id="new_url_button">Save</button>
+                        <span style="display: flex;">
+                            <input type="text" id="new_url">
+                            <button type="button" id="new_url_button" class="mintContainer">Save</button>
+                        </span>
+                        
 
                         <ul id="websites">
                             <!-- Websites go here, Delete button here(Lil trashcan) -->

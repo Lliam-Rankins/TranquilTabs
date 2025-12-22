@@ -38,7 +38,7 @@ class Timer {
         // End Pause Timer, Unblock
         if (timerType == Timer.TimerType.Pause) {
             // Unblock Logic
-            Timer.unblock(group);
+            await Timer.unblock(group);
             
             // Start Open Timer
             Timer.startTimer(group, Timer.TimerType.Open);
@@ -48,7 +48,9 @@ class Timer {
         else if (timerType == Timer.TimerType.Open) {
             console.log("Ending Timer");
             // Block
-            Timer.block(group);
+            await Timer.block(group);
+
+            console.log("Timer Ended");
         }
     }
 
@@ -62,7 +64,7 @@ class Timer {
         group.blocked = false;
 
         // Post Group
-        Groups.postGroup(group);
+        await Groups.postGroup(group);
 
         // Remove Block
         document.getElementById(BLOCK_DIV_ID).style.visibility = "hidden";
@@ -73,14 +75,16 @@ class Timer {
      * @param {*} group The group that will be blocked
      */
     static async block(group) {
-        console.log(block);
+        console.log("Hello");
         // Block Group
         group.blocked = true;
 
         // Post Group
-        Groups.postGroup(group);
+        await Groups.postGroup(group);
 
         // Remove Block
         document.getElementById(BLOCK_DIV_ID).style.visibility = "visible";
+
+        console.log("Goodbye");
     }
 }

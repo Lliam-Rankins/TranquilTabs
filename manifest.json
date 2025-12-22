@@ -14,7 +14,7 @@
         {
             "matches": [ "<all_urls>" ],
             "js": [ "JavaScript/Restriction.js", "JavaScript/Timer.js", "JavaScript/blocking.js"],
-            "css": [ "CSS/blocking.css", "CSS/options.css"],
+            "css": ["CSS/extension.css", "CSS/blocking.css"],
             "run_at": "document_start"
         }
     ],

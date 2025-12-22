@@ -197,7 +197,7 @@ async function addGroup(group) {
     // Time
     let time = document.createElement('div');
     time.className = "time mintContainer";
-    time.innerHTML = group.start_time + "<br>" + group.end_time;
+    time.innerHTML = "S: " + group.start_time + "<br>" + "E: " + group.end_time;
 
     // Up Button
     let upButton = document.createElement('button');
@@ -232,7 +232,7 @@ async function addGroup(group) {
     // Opens Left/Total
     let opens = document.createElement('div');
     opens.className = "opens mintContainer";
-    opens.textContent = group.opens_left + "/" + group.opens_total + " Opens";
+    opens.textContent = group.opens_left + "/" + group.opens_total;
     
     // Down Button
     let downButton = document.createElement('button');
@@ -429,6 +429,22 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     // Hide settings page
     document.getElementById("group_settings_backdrop").style.display = 'none';
 });
+
+
+///////////////////
+//  Delete Group
+///////////////////
+document.getElementById("group_delete_button").addEventListener("click", async () => {
+    // Check if there is an ID or not
+    let id = document.getElementById("group_save_button").getAttribute("data-edit-id");
+    if (id == '') return;
+
+    await Groups.removeGroup(id);
+
+    await repopulateGroups();
+
+    hideOptions();
+})
 
 
 ////////////////////////////
