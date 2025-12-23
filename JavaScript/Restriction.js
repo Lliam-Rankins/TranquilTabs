@@ -48,7 +48,8 @@ class RestrictionGroup {
 
         // Other
         this.blocked = true;
-        this.streak = 0;
+        
+        this.streak_start_date = new Date().toDateString();
     }
 
     // Adds a restriction to the list
@@ -110,6 +111,16 @@ class RestrictionGroup {
         // If currTime is between start and end time, true
         if (startTime < currTime && currTime < endTime) return true;
         else return false;
+    }
+
+    /*
+    *   Returns the current date with hours, minutes, and seconds all 0;
+    */
+    static getStreak(dateString) {
+        let startDate = new Date(dateString);
+        let todayDate = new Date();
+
+        return Math.floor((todayDate - startDate) / (1000 * 3600 * 24));
     }
 }
 

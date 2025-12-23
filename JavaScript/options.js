@@ -141,7 +141,7 @@ async function addGroup(group) {
     // Streaks
     let streak = document.createElement('div');
     streak.className = "streak mintContainer";
-    streak.innerHTML = group.streak + "<br>Days";
+    streak.innerHTML = RestrictionGroup.getStreak(group.streak_start_date) + "<br>Days";
 
 
 
@@ -197,7 +197,7 @@ async function addGroup(group) {
     // Time
     let time = document.createElement('div');
     time.className = "time mintContainer";
-    time.innerHTML = "S: " + group.start_time + "<br>" + "E: " + group.end_time;
+    time.innerHTML = "Start: " + group.start_time + "<br>" + "End:  " + group.end_time;
 
     // Up Button
     let upButton = document.createElement('button');
@@ -414,8 +414,6 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     // Check if there is an ID or not
     let id = document.getElementById("group_save_button").getAttribute("data-edit-id");
     if (id == '') id = await Groups.getNextID();
-
-    console.log(id);
 
     // Make new restriction
     let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);

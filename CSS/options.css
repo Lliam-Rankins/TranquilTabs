@@ -193,11 +193,15 @@ input {
 .time {
     height: auto;
     flex-grow: 2;
-    font-size: min(2vh, 30px);
+    font-size: min(2.5vh, 30px);
+    justify-content: center;
+    align-items: center;
 }
 
 .opens {
     flex-grow: 2;
+    justify-content: center;
+    align-items: center;
 }
 
 
