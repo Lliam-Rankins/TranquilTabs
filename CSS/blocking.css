@@ -20,7 +20,7 @@
 
 #block_Body {
     flex-direction: column;
-    max-width: 33%;
+    width: 33%;
 
     /* Flexbox to control child layout */
     display: flex;
@@ -35,6 +35,7 @@
 
 #group_name {
     text-align: center;
+    margin: 5px;
 }
 
 #unlock_button {
@@ -69,4 +70,26 @@
 /* Used for general text across the extension */
 .text {
     font-family: Roboto, 'Open Sans', sans-serif;
+}
+
+
+
+/* 
+*   Button
+*/
+#unlock_button {
+    filter: drop-shadow(1px 1px black);
+    transition: transform .25s, filter .25s;
+    cursor: pointer;
+    border: none;
+}
+
+#unlock_button:hover {
+    filter: drop-shadow(3px 3px black);
+    transform: translate(-3px, -3px);
+}
+
+#unlock_button:active {
+    filter: drop-shadow(2px 2px black);
+    transform: translate(-2px, -2px);
 }

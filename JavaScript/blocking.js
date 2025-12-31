@@ -6,13 +6,12 @@
 const BLOCK_DIV_ID = "blockPageBackground";
 
 
-
 ////////////////////////////
 //
-//  On Dom Body load
+//  Initial Page Setup
 //
 ////////////////////////////
-document.addEventListener("DOMContentLoaded", async () => {
+async function init() {
     ////////////////////////////
     //
     //  Block Page
@@ -69,15 +68,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         open_text = document.createElement('p');
         open_text.id = "open_text";
         open_text.className = "text";
-        open_text.textContent = "Opens: " + group.opens_left + "/" + group.opens_total;
+        let opens_left = group.opens_left;
+        open_text.textContent = "Opens: " + opens_left + "/" + group.opens_total;
         blockPage_Body.append(open_text);
 
         // Create Unblock Button
         const requestUnblock = document.createElement("button");
-        requestUnblock.textContent = "Unblock? " + group.pause_time + "s";
         requestUnblock.className = "button mintContainer";
         requestUnblock.id = "unlock_button";
-        requestUnblock.addEventListener('click', () => Timer.startTimer(group, Timer.TimerType.Pause));
+
+        // If we have opens
+        requestUnblock.textContent = "Unblock? " + group.pause_time + "s";
+        requestUnblock.addEventListener('click', () => {
+            // Using last open
+            if (group.opens_left == 1) {
+                requestUnblock.textContent = "Blocked";
+            }
+
+            if (group.opens_left > 0) {
+                opens_left -= 1;
+                open_text.textContent = "Opens: " + opens_left + "/" + group.opens_total;
+                Timer.startTimer(group, Timer.TimerType.Pause);
+            }
+            else {
+                // Do nothing
+            }
+            
+            
+        });
         blockPage_Body.append(requestUnblock);
 
         // TODO: Display Forest
@@ -86,4 +104,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (group.blocked)   blockPage.style.visibility='visible';
         else                  blockPage.style.visibility='hidden';
     }
-});
+}
+
+
+////////////////////////////
+//
+//  On <body> load
+//
+////////////////////////////
+(function waitForBody() {
+    if (document.body) {
+        init();
+    } else {
+        // Check again very soon
+        requestAnimationFrame(waitForBody);
+    }
+})();

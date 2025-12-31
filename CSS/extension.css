@@ -12,7 +12,6 @@
 *   Containers
 */
 .sageContainer {
-    display: flex;
     flex-direction: row;
     background-color: var(--sage);
     border-radius: 10px;
@@ -21,7 +20,6 @@
 }
 
 .mintContainer {
-    display: flex;
     flex-direction: row;
     background-color: var(--mint);
     border-radius: 10px;
@@ -30,7 +28,6 @@
 }
 
 .ivoryContainer {
-    display: flex;
     flex-direction: row;
     background-color: var(--ivory);
     border-radius: 10px;
@@ -38,22 +35,3 @@
     padding: 5px;
 }
 
-/* 
-*   Button
-*/
-button {
-    filter: drop-shadow(1px 1px black);
-    transition: transform .25s, filter .25s;
-    cursor: pointer;
-    border: none;
-}
-
-button:hover {
-    filter: drop-shadow(3px 3px black);
-    transform: translate(-3px, -3px);
-}
-
-button:active {
-    filter: drop-shadow(2px 2px black);
-    transform: translate(-2px, -2px);
-}

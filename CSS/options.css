@@ -18,14 +18,39 @@ input {
     border-radius: 5px;
 }
 
+html * {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
+/* 
+*   Button
+*/
+button {
+    filter: drop-shadow(1px 1px black);
+    transition: transform .25s, filter .25s;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    filter: drop-shadow(3px 3px black);
+    transform: translate(-3px, -3px);
+}
+
+button:active {
+    filter: drop-shadow(2px 2px black);
+    transform: translate(-2px, -2px);
+}
+
 
 
 /*
 *   Group Page
 */
 .header {
-    display:flex;
-    flex-direction: row;
+    display: grid;
+    grid-template: 1fr / 2fr 1fr 5fr;
     height: calc(10vh);
     box-sizing: content-box;
     /* padding: 5px; */
@@ -42,7 +67,6 @@ input {
     top: 0px;
 
 
-    display:flex;
     flex-direction: column;
     overflow: hidden;
 }
@@ -66,7 +90,7 @@ input {
 
 #extension_settings_button {
     display: flex;
-    height: 100%;
+    height: 25px;
     align-self: center;
     margin-left: auto;
     border-radius: 30px;
@@ -105,26 +129,48 @@ input {
 
 
 
+
+
 /*
 *   Group
 */
-.groupNameDays {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 2;
+.group {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr .5fr;
+    grid-template-rows: 50% 50%;
+    height: min(150px, 25vh);
+    margin-right: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .streak {
+    grid-area: 1 / 1 / span 2 / span 1;
     font-size: min(50px, 6vh);
     font-weight: 500;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
     line-height: 1;
 
-    aspect-ratio: 1/1;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+}
+
+
+/* Group Name and Days */
+.groupNameDays {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+
+.groupTitle {
+    grid-area: 1 / 2;
+    display: flex;
+    flex-direction: column;
+
+    align-self: flex-end;
 }
 
 .groupName {
@@ -133,13 +179,16 @@ input {
     font-size: min(40px, 6vh);
     height: 50%;
     overflow: hidden;
+    padding-bottom: 5px;
 }
 
 .days {
+    grid-area: 2 / 2 / span 1 / span 1;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    align-self: center;
     padding: 5px;
     padding-left: 0px;
     padding-right: 0px;
@@ -148,16 +197,13 @@ input {
 }
 
 .day {
-    aspect-ratio: 1/1;
-    height: min(100%, 5vw);
-    max-width: 100%;
-    font-size: calc(1vh + 1vw);
-    align-self: center;
-    justify-content: center;
-    align-items: center;
-    margin: 0px;
-    box-sizing: border-box;
-    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    max-width: 28px;   /* hard cap so they never get huge */
+    max-height: 28px;
+    min-width: 16px;   /* allows shrinking */
+    min-height: 16px;
+    flex-shrink: 2;    /* allows compression */
+    font-size: 0.75rem; /* scales with shrinking */
 }
 
 .activeDay {
@@ -168,61 +214,55 @@ input {
     background-color: var(--grey);
 }
 
-.groupToolsTop {
-    height: 50%;
+
+/* Group Tools */
+.time {
     display: flex;
-    flex-direction: row;
-    justify-content: right;
+    font-size: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .groupToolsBottom {
-    height: 50%;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     justify-content: right;
 }
 
-.groupTools {
-    display: flex;
-    flex-direction: column;
+/* .editButton {
+    width: 100%;
+} */
 
-    height: 100%;
-    min-width: 25%;
-}
-
-.time {
-    height: auto;
-    flex-grow: 2;
-    font-size: min(2.5vh, 30px);
-    justify-content: center;
-    align-items: center;
+.editIcon {
+    max-height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
 }
 
 .opens {
-    flex-grow: 2;
+    font-size: min(3.5vh, 30px);
     justify-content: center;
     align-items: center;
 }
 
+/* Priority Tools */
+.priorityUp {
+    grid-area: 1 / 4;
+}
 
-.upDown {
-    display: flex;
-    flex-direction: column;
-    aspect-ratio: 1/2;
+.priorityDown {
+    grid-area: 2 / 4;
 }
 
 .arrowImg {
     height: 100%;
-    aspect-ratio: 1/1;
+    max-width: min(55px, 100%);
+    min-width: 20px;
 }
 
 
 
-.group {
-    height: min(150px, 25vh);
-    margin-right: 5px;
-    box-sizing: content-box;
-}
+
 
 
 
@@ -231,7 +271,7 @@ input {
 */
 
 #group_settings_backdrop {
-    display: flex;
+    display: none;
 
     justify-content: center;
     align-items: center;
@@ -261,8 +301,8 @@ input {
 }
 
 #edit_body {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 50% 50%;
 }
 
 #edit_left {
@@ -273,7 +313,6 @@ input {
 }
 
 #edit_right {
-    display:flex;
     flex-direction: column;
 
     margin:5px;
@@ -306,6 +345,11 @@ input {
 #group_delete_button {
     align-items: center;
     justify-self: center;
+}
+
+.groupField {
+    display: flex;
+    flex-direction: column;
 }
 
 #new_url_button {

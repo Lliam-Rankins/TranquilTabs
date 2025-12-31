@@ -141,13 +141,18 @@ async function addGroup(group) {
     // Streaks
     let streak = document.createElement('div');
     streak.className = "streak mintContainer";
-    streak.innerHTML = RestrictionGroup.getStreak(group.streak_start_date) + "<br>Days";
-
+    streak.innerHTML = RestrictionGroup.getStreak(group.streak_start_date)
+    if (streak.innerHTML == 1) streak.innerHTML += "<br>Day";
+    else streak.innerHTML += "<br>Days";
 
 
     //////////////////////
     //  Group Name/Days
     //////////////////////
+
+    // Group Title
+    let groupTitle = document.createElement('div');
+    groupTitle.className = "groupTitle";
 
     // Group Name
     let groupName = document.createElement('p');
@@ -156,7 +161,11 @@ async function addGroup(group) {
 
     // Group Name Bar
     let groupNameBar = document.createElement('div');
-    groupNameBar.className = "bar";
+    groupNameBar.className = "bar groupBar";
+
+
+    groupTitle.append(groupName);
+    groupTitle.append(groupNameBar);
 
     // Days
     let days = document.createElement('div');
@@ -182,12 +191,6 @@ async function addGroup(group) {
         days.append(day);
     }
 
-    let groupNameDays = document.createElement('div');
-    groupNameDays.className = "groupNameDays";
-    groupNameDays.append(groupName);
-    groupNameDays.append(groupNameBar);
-    groupNameDays.append(days);
-
 
 
     //////////////////////
@@ -199,21 +202,25 @@ async function addGroup(group) {
     time.className = "time mintContainer";
     time.innerHTML = "Start: " + group.start_time + "<br>" + "End:  " + group.end_time;
 
-    // Up Button
+
+    // Up Down Buttons
     let upButton = document.createElement('button');
-    upButton.className = "priorityButton mintContainer";
+    upButton.className = "priorityUp mintContainer";
 
     let upArrow = document.createElement('img');
     upArrow.className = "arrowImg";
     upArrow.src = "../Media/triangle.png";
     upButton.append(upArrow);
 
-    let groupToolsTop = document.createElement('div');
-    groupToolsTop.className = "groupToolsTop";
-    groupToolsTop.append(time);
-    groupToolsTop.append(upButton);
+    // Down Button
+    let downButton = document.createElement('button');
+    downButton.className = "priorityDown mintContainer";
 
-
+    let downArrow = document.createElement('img');
+    downArrow.className = "arrowImg";
+    downArrow.src = "../Media/triangle.png";
+    downArrow.style.transform = "scaleY(-1)";
+    downButton.append(downArrow);
 
     ////////////////////////
     //  Group Tools Bottom
@@ -234,21 +241,12 @@ async function addGroup(group) {
     opens.className = "opens mintContainer";
     opens.textContent = group.opens_left + "/" + group.opens_total;
     
-    // Down Button
-    let downButton = document.createElement('button');
-    downButton.className = "priorityButton mintContainer";
-
-    let downArrow = document.createElement('img');
-    downArrow.className = "arrowImg";
-    downArrow.src = "../Media/triangle.png";
-    downArrow.style.transform = "scaleY(-1)";
-    downButton.append(downArrow);
+    
 
     let groupToolsBottom = document.createElement('div');
     groupToolsBottom.className = "groupToolsBottom";
     groupToolsBottom.append(editButton);
     groupToolsBottom.append(opens);
-    groupToolsBottom.append(downButton);
     
 
 
@@ -307,17 +305,14 @@ async function addGroup(group) {
 
     ////////////////////////
     //  Group Appendation
-    ////////////////////////
-
-    // Group Tools
-    let groupTools = document.createElement('div');
-    groupTools.className = "groupTools";
-    groupTools.append(groupToolsTop);
-    groupTools.append(groupToolsBottom);
-
+    ////////////////////////    
     groupDiv.append(streak);
-    groupDiv.append(groupNameDays);
-    groupDiv.append(groupTools);
+    groupDiv.append(groupTitle);
+    groupDiv.append(days);
+    groupDiv.append(time);
+    groupDiv.append(groupToolsBottom);
+    groupDiv.append(upButton);
+    groupDiv.append(downButton);
 
     document.getElementById("group_list").append(groupDiv);
 
