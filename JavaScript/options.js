@@ -45,6 +45,8 @@ function showEmptyOptions() {
     document.getElementById('opens').value = '';
 
     // Clear Websites
+    let website_input = document.getElementById('new_url');
+    website_input.value = '';
     let website_list = document.getElementById('websites');
     website_list.innerHTML = '';
 

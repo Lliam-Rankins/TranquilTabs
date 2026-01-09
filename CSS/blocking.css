@@ -57,7 +57,7 @@
 
 #open_text {
     color: var(--mint);
-    font-size: 14px;
+    font-size: 2vh;
     font-weight: 500;
 }
 
@@ -82,6 +82,7 @@
     transition: transform .25s, filter .25s;
     cursor: pointer;
     border: none;
+    font-size: 3vh;
 }
 
 #unlock_button:hover {
