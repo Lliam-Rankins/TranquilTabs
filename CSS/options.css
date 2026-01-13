@@ -95,12 +95,13 @@ button:active {
     aspect-ratio: 1/1;
 }
 
-#extension_settings_button {
+#Kofi {
     display: flex;
-    height: 100%;
+    height: 70%;
     align-self: center;
     margin-left: auto;
     border-radius: 30px;
+    padding: 10px;
 
     box-sizing: border-box;
 }
