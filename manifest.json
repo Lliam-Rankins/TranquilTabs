@@ -13,11 +13,14 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "JavaScript/Restriction.js", "JavaScript/Timer.js", "JavaScript/blocking.js"],
-            "css": ["CSS/extension.css", "CSS/blocking.css"],
+            "js": [ "JavaScript/Restriction.js", "JavaScript/Timer.js", "JavaScript/content-script.js"],
             "run_at": "document_start"
         }
     ],
+    "background": {
+        "service_worker": "JavaScript/service-worker.js",
+        "type": "module"
+    },
     "options_ui": {
         "page": "options.html",
         "open_in_tab": true

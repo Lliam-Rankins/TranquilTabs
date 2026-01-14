@@ -4,7 +4,7 @@
   --vine: #387A46;
 }
 
-#blockPageBackground {
+body {
     position: fixed;
     background-color: #101212;
     width: 100vw;
@@ -36,6 +36,9 @@
 #group_name {
     text-align: center;
     margin: 5px;
+    color: var(--mint);
+    font-size: 70px;
+    font-weight: 500;
 }
 
 #unlock_button {
@@ -58,12 +61,6 @@
 #open_text {
     color: var(--mint);
     font-size: 2vh;
-    font-weight: 500;
-}
-
-#group_name {
-    color: var(--mint);
-    font-size: 70px;
     font-weight: 500;
 }
 

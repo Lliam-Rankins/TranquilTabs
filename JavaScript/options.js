@@ -379,13 +379,19 @@ document.getElementById("group_save_button").addEventListener("click", async fun
         return;
     }
 
-    let pause_time = document.getElementById("pause_time").value;
-    let open_time = document.getElementById("open_time").value;
+    let pause_time = parseFloat(document.getElementById("pause_time").value);
+    let open_time = parseFloat(document.getElementById("open_time").value);
 
     // If no pause time, assume 0s
-    if (pause_time == '') pause_time = 0;
+    if (pause_time == '') pause_time = 0.0;
 
-    const opens = document.getElementById("opens").value;
+    const opens = parseInt(document.getElementById("opens").value);
+
+    if (!opens) {
+        errorMessage.innerHTML = "Opens must be a whole number.";
+        errorMessage.style.visibility = "visible";
+        return;
+    }
 
     // If pause/open time or opens are < 0, error
     if (pause_time < 0 || open_time < 0 || opens < 0) {

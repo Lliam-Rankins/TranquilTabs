@@ -237,23 +237,32 @@ class Groups {
     //////////////////////////
 
     // Finds the matched URL in given list of URLS
-    static async findMatch() {
+    static async findActive(link) {
         let groups = await Groups.getGroups();
 
-        let matched_groups = [];
+        let activeGroup;
 
         // Look through groups
         for (const group of groups) {
             // Look through regex websites
             for (const regex of group.regex) {
-                // Found Match, add to matched groups
-                if (window.location.href.match(new RegExp(regex))) {
-                    matched_groups.push(group);
+                // Found Match
+                if (link.match(new RegExp(regex))) {
+                    // Skip Unblocked groups
+                    if (!group.blocked) continue;
+
+                    // Skip inactiive groups
+                    if (!RestrictionGroup.isActive(group)) continue;
+
+                    // If no group selected, or found higher priority group
+                    if (!activeGroup || group.priority > activeGroup.priority) {
+                        activeGroup = group;
+                    }
                 }
             }
         }
 
-        return matched_groups;
+        return activeGroup;
     }
 
 

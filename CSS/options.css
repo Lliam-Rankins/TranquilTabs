@@ -50,14 +50,14 @@ button:active {
 */
 .header {
     display: grid;
-    grid-template: 10vh / 2fr 1fr 5fr;
+    grid-template: 100% / 2fr 1fr 5fr;
     box-sizing: content-box;
     padding: 5px;
 }
 
 #extension_page_background {
     display: grid;
-    grid-template: auto auto auto / 1fr;
+    grid-template: 10vh auto 1fr / 1fr;
     background-color: var(--grey);
     width: min(700pt, 100vw);
     height: 100vh;
