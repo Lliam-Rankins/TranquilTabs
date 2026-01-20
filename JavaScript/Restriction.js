@@ -83,7 +83,10 @@ class RestrictionGroup {
 
     // Translate Url string into a regex pattern
     static urlToRegex(url) {
-        url = url.replace(/[-/\\^$+?{}()|[\]]/g, '\\$&');
+        url = url.replaceAll(/[-/\\^$+?{}()|[\]]/g, '\\$&');
+        console.log(url);
+        url = url.replace(/\./g, '\\.');
+        console.log(url);
         url = url.replace(/\*/g, '.*');
         url = '^' + url + '$';
 
@@ -323,3 +326,9 @@ class Groups {
         }   
     }
 }
+
+
+//////////////
+//  Exports
+//////////////
+export { Groups, RestrictionGroup};

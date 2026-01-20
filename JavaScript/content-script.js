@@ -5,6 +5,8 @@
 ////////////////////////////
 const BLOCK_DIV_ID = "blockPageBackground";
 
+console.log("Hello");
+
 
 
 ////////////////////////////
@@ -13,33 +15,39 @@ const BLOCK_DIV_ID = "blockPageBackground";
 //
 ////////////////////////////
 
-// Message from service worker to block associated
-chrome.runtime.onMessage.addListener(async (msg, sender) => {
+// Message from service worker to block associated tabs
+chrome.runtime.onMessage.addListener((msg, sender) => {
 
     console.log("Hello from ur reblock");
 
     // Receiving notice of SOME group getting blocked
     if (msg.action == "BlockPage") {
+
         // Check if current page should be blocked
         let link = window.location.href;
         
-        let group = await Groups.findActive(link);
+        // Request active group
+        chrome.runtime.sendMessage({action: "pageCheck", link: link}, (response) => {
+            
+            let group = response.group;
 
-        // No group was active
-        if (group == null) return;
+            // No matching group
+            if (!group) return;
 
-        /////////////////////
-        //  Open Block Page
-        /////////////////////
 
-        // Send a message to the service worker to make a block page
-        chrome.runtime.sendMessage({ 
-            action: "newPage",
-            group: matchedGroup,
-            link: link
-        });
+            /////////////////////
+            //  Open Block Page
+            /////////////////////
+
+            // Send a message to the service worker to make a block page
+            chrome.runtime.sendMessage({ 
+                action: "newPage",
+                group: group,
+                link: link
+            });
+        }); 
     }
-})
+});
 
 
 
@@ -57,11 +65,15 @@ async function init() {
 
     let link = window.location.href;
 
-    // Get active group, or null
-    let matchedGroup = await Groups.findActive(link);
+    // Request active group
+    chrome.runtime.sendMessage({action: "pageCheck", link: link}, (response) => {
+        
+        let group = response.group;
 
-    // Found an active group
-    if (matchedGroup) {
+        // No group found
+        if (!group) return;
+
+
         /////////////////////
         //  Open Block Page
         /////////////////////
@@ -69,10 +81,10 @@ async function init() {
         // Send a message to the service worker to make a block page
         chrome.runtime.sendMessage({ 
             action: "newPage",
-            group: matchedGroup,
+            group: group,
             link: link
         });
-    }
+    }); 
 }
 
 
@@ -89,3 +101,5 @@ async function init() {
         requestAnimationFrame(waitForBody);
     }
 })();
+
+console.log("Script Run");

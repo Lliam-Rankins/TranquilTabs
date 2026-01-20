@@ -13,8 +13,9 @@
     "content_scripts": [
         {
             "matches": [ "<all_urls>" ],
-            "js": [ "JavaScript/Restriction.js", "JavaScript/Timer.js", "JavaScript/content-script.js"],
-            "run_at": "document_start"
+            "js": ["JavaScript/content-script.js"],
+            "run_at": "document_start",
+            "type": "module"
         }
     ],
     "background": {

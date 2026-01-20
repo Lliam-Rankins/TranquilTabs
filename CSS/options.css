@@ -57,7 +57,7 @@ button:active {
 
 #extension_page_background {
     display: grid;
-    grid-template: 10vh auto 1fr / 1fr;
+    grid-template: clamp(2.5rem, 10vh, 100px) auto 1fr / 1fr;
     background-color: var(--grey);
     width: min(700pt, 100vw);
     height: 100vh;
@@ -97,7 +97,7 @@ button:active {
 
 #Kofi {
     display: flex;
-    height: 70%;
+    height: 100%;
     align-self: center;
     margin-left: auto;
     border-radius: 30px;
@@ -208,6 +208,7 @@ button:active {
 
 .day {
     justify-self: center;
+    font-size: clamp(.25rem, 2vw, 3rem);
     align-self: center;
     box-sizing: border-box;
     display: flex;
@@ -261,7 +262,7 @@ button:active {
     flex-grow: 3;
     justify-content: center;
     align-items: center;
-    font-size: clamp(.5rem, 2vh, 3rem);
+    font-size: clamp(.5rem, 5vh, 3rem);
 }
 
 /* Priority Tools */

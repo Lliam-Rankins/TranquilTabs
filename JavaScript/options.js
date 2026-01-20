@@ -1,9 +1,11 @@
+import { Groups, RestrictionGroup } from './Restriction.js';
+
 ////////////////////////////
 //
 //  Global Variables
 //
 ////////////////////////////
-// var groups;
+let groups = [];
 
 ////////////////////////////
 //
@@ -113,7 +115,7 @@ function addWebsite(website_list, website) {
 
 async function populateGroups() { 
     // For every group, add a group to the group list
-    let groups = await Groups.getGroups();
+    groups = await Groups.getGroups();
 
     // Sort Groups
     groups.sort((a, b) => b.priority - a.priority);
@@ -461,7 +463,7 @@ async function init() {
     // Groups, display them
     if (groups && groups.length > 0) {
         console.log(groups);
-        populateGroups(group_grid);
+        populateGroups();
     }
     // No Groups, tell user to add some
     else {
