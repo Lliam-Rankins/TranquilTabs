@@ -68,21 +68,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 
+
+//////////////////////
+//
 // Alarm Logic
+//
+//////////////////////
 chrome.alarms.onAlarm.addListener(async (alarm) => {
 
     // Reset groups opens when have a daily reset
     if (alarm.name == "DailyReset") {
+        console.log("Daily reset happening");
         // Get all groups
-        let groups = Groups.getGroups();
+        let groups = await Groups.getGroups();
 
         // Loop through each group, reset their opens_left
-        for (group of groups) {
+        for (group in groups) {
             group.opens_left = group.opens_total;
         }
 
         // Post them
-        Groups.postGroups(groups);
+        console.log(groups);
+        await Groups.postGroups(groups);
     }
 
     // Other alarm, must be group lock
@@ -107,27 +114,39 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 
-// Implementing Daily alarm
-chrome.runtime.onStartup.addListener(() => {
+
+//////////////////////
+//
+// Startup
+//
+//////////////////////
+chrome.runtime.onStartup.addListener(async () => {
+    console.log("Setting the daily reset");
+
+    const dailyAlarm = await chrome.alarms.get("Daily-Reset");
+    console.log(dailyAlarm);
+
     // If no alarm exists
-    if (!chrome.alarms.get("Daily-Reset")) {
+    if (!dailyAlarm) {
+        console.log("No daily reset alarm");
         // Calcuate time until next 2AM
         let currTime = new Date();
         let alarmTime = new Date().setHours(2, 0, 0, 0);
 
         // Already passed 2 AM
         if (currTime > alarmTime) {
-            alarmTime.setDate(alarmTime.getDate() + 1);
+            alarmTime += 24 * 60 * 60 * 1000;
         }
 
         // Make the alarm
-        chrome.alarm.create("Daily-Reset",
+        chrome.alarms.create("DailyReset",
+            // (alarmTime.getTime() - currTime.getTime()) / 1000 / 60
             {
                 // Delay is minutes until next 2 am
-                delayInMinutes: (alarmTime.getTime() - currTime.getTime()) / 1000 / 60,
+                delayInMinutes: 1,
                 // 24 Hour delay
                 periodInMinutes: 24 * 60
             }
-        )
+        );
     }
-})
+});

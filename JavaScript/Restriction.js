@@ -105,15 +105,25 @@ class RestrictionGroup {
 
     static isActive(group) {
         // Get Current Time
-        const currTime =    this.dateToMillis(new Date());
+        const currTime =    new Date();
+        const currTimeInMillis = this.dateToMillis(currTime);
+        
         const startTime =   this.dateToMillis(new Date("1970-01-01T" + group.start_time));
         const endTime =     this.dateToMillis(new Date("1970-01-01T" + group.end_time));
 
-        console.log(startTime + " : " + currTime + " : " + endTime);
+        // If currTime is between start and end time
+        if (startTime < currTimeInMillis && currTimeInMillis < endTime) {
 
-        // If currTime is between start and end time, true
-        if (startTime < currTime && currTime < endTime) return true;
-        else return false;
+            // If today is active
+            if (group.weekdays[currTime.getDay()]) {
+
+                // Correct day of the week and time
+                return true;
+            }
+        }
+        
+        // Not active group
+        return false;
     }
 
     /*
@@ -213,7 +223,7 @@ class Groups {
         }
 
         // Store URLS
-        Groups.postGroups(groups);
+        await Groups.postGroups(groups);
     }
 
     // Delete Group

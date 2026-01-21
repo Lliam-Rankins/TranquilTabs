@@ -108,9 +108,43 @@ function addWebsite(website_list, website) {
     const url = document.createElement("li");
     url.textContent = website;
     url.className = "website_text";
+    url.contentEditable = true;
+
+    
+
+    // Create Delete Button
+    const url_delete_button = document.createElement('button');
+    url_delete_button.className = "url_delete_button sageContainer";
+    const url_delete_icon = document.createElement('img');
+    url_delete_icon.className = "url_delete_icon";
+    url_delete_icon.src = "Media/trash.png";
+    url_delete_button.append(url_delete_icon);
+
+    // Create Container
+    const url_container = document.createElement('div');
+    url_container.className = "url_container mintContainer";
+
+    url_container.appendChild(url);
+    url_container.appendChild(url_delete_button);
+
+    
+    // TODO: Ensure no nonvisible characters can be insterted
+    // Add listener for empty value, remove self if empty
+    url.addEventListener("blur", () => {
+        if (url.textContent == "") {
+            website_list.removeChild(url_container);
+        }
+    });
+
+    // Button Delete Functionality
+    url_delete_button.addEventListener("click", () => {
+        website_list.removeChild(url_container);
+    });
+    
+    
 
     // Add element to list
-    website_list.append(url);
+    website_list.append(url_container);
 }
 
 async function populateGroups() { 
@@ -360,6 +394,7 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     // Prevent normal submission process
     event.preventDefault();
     
+    // TODO: Ensure no nonvisible characters can be insterted
     // Grab Data
     const group_name = document.getElementById("settings_group_name").innerHTML;
 

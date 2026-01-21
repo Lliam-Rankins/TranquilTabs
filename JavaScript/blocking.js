@@ -15,7 +15,6 @@ let link = null;
 
 // Page Requests its blocking information from service worker on load
 chrome.runtime.sendMessage({action: "blockPageInfoRequest"}, (response) => {
-    console.log(response);
     group = response.blockInfo.group;
     link = response.blockInfo.link;
 
