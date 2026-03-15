@@ -510,6 +510,12 @@ async function init() {
         if (e.target == this) hideOptions();
     });
 
+    // Adds kofi link to kofi button
+    document.getElementById("Kofi").addEventListener("click", () => {
+        // Open Kofi link
+        window.open('https://ko-fi.com/lliamrankins', '_blank', 'noopener,noreferrer')
+    });
+
     // Add Click to new group backdrop
     document.getElementById("new_group_button").addEventListener("click", showEmptyOptions);
 }
