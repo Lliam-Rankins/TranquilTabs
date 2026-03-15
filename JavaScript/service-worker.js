@@ -1,5 +1,50 @@
 // Import
+import { AlarmList } from './Alarms.js';
 import { Groups, RestrictionGroup } from './Restriction.js';
+
+//////////////////////
+//
+// Helper Methods
+//
+//////////////////////
+async function dailyResetFire(alarm) {
+    // Get all groups
+    let groups = await Groups.getGroups();
+
+    // Loop through each group, reset their opens_left
+    for (let group of groups) {
+        group.opens_left = group.opens_total;
+    }
+
+    // Post them
+    await Groups.postGroups(groups);
+
+    // Make next daily reset
+    await AlarmList.createDailyAlarm();
+}
+
+async function groupAlarmFire(alarm) {
+    // Open timer has finished
+    // Retreive group, update blocked status.
+    let group = await Groups.getGroup(alarm.name);
+    group.blocked = true;
+    await Groups.postGroup(group);
+
+    // Remove alarm from storage
+    await AlarmList.removeAlarm(alarm);
+
+    // Grab all tabs and send message
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+        chrome.tabs.sendMessage( tab.id, { action: "BlockPage", group }, () => {
+            if (chrome.runtime.lastError) {
+                // No content script
+            }
+        });
+    }
+}
+
+
 
 //////////////////////
 //
@@ -78,39 +123,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
     // Reset groups opens when have a daily reset
     if (alarm.name == "DailyReset") {
-        console.log("Daily reset happening");
-        // Get all groups
-        let groups = await Groups.getGroups();
-
-        // Loop through each group, reset their opens_left
-        for (group in groups) {
-            group.opens_left = group.opens_total;
-        }
-
-        // Post them
-        console.log(groups);
-        await Groups.postGroups(groups);
+        // Fire the daily reset
+        await dailyResetFire(alarm);
     }
 
     // Other alarm, must be group lock
     else {
-        // Open timer has finished
-        // Retreive group, update blocked status.
-        let group = await Groups.getGroup(alarm.name);
-        group.blocked = true;
-        await Groups.postGroup(group);
-
-        // Grab all tabs and send message
-        const tabs = await chrome.tabs.query({});
-        for (const tab of tabs) {
-            chrome.tabs.sendMessage( tab.id, { action: "BlockPage", group }, () => {
-                if (chrome.runtime.lastError) {
-                    // No content script
-                }
-            });
-        }
+        // Fire the group alarm
+        await groupAlarmFire(alarm);
     }
-    
 });
 
 
@@ -121,32 +142,50 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 //
 //////////////////////
 chrome.runtime.onStartup.addListener(async () => {
-    console.log("Setting the daily reset");
+    console.log("Startup");
 
-    const dailyAlarm = await chrome.alarms.get("Daily-Reset");
-    console.log(dailyAlarm);
+    // TODO need to go through all alarms in alarm list and check if done or not
+    let alarmList = await AlarmList.getAlarms();
 
-    // If no alarm exists
-    if (!dailyAlarm) {
-        console.log("No daily reset alarm");
-        // Calcuate time until next 2AM
-        let currTime = new Date();
-        let alarmTime = new Date().setHours(2, 0, 0, 0);
+    console.log(alarmList);
 
-        // Already passed 2 AM
-        if (currTime > alarmTime) {
-            alarmTime += 24 * 60 * 60 * 1000;
-        }
+    // Grab the current time
+    let currTime = new Date().getTime();
 
-        // Make the alarm
-        chrome.alarms.create("DailyReset",
-            // (alarmTime.getTime() - currTime.getTime()) / 1000 / 60
-            {
-                // Delay is minutes until next 2 am
-                delayInMinutes: 1,
-                // 24 Hour delay
-                periodInMinutes: 24 * 60
-            }
-        );
+    // Iterate over all alarms
+    for (let alarm of alarmList) {
+        // Checks if the alarm should have fired by now
+        if (alarm.scheduledTime < currTime) {
+            await groupAlarmFire(alarm);
+        } 
     }
+
+    // Daily Reset Logic
+    const result = await chrome.storage.local.get(AlarmList.DAILY_RESET_KEY);
+    const storedTime = result[AlarmList.DAILY_RESET_KEY];
+
+
+    // If the stored reset time is in the past, the reset was missed
+    if (storedTime && storedTime < currTime) {
+        console.log("Missed daily reset — firing manually");
+        await dailyResetFire({ name: "DailyReset" });
+    }
+
+    console.log("Startup Done");
 });
+
+
+
+//////////////////////
+//
+// Install
+//
+//////////////////////
+self.addEventListener("install", async (event) => {
+    console.log("Install");
+
+    // Create Alarm, then store it in the system
+    await AlarmList.createDailyAlarm();
+
+    console.log("Install Done");
+})

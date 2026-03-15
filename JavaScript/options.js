@@ -238,7 +238,21 @@ async function addGroup(group) {
     // Time
     let time = document.createElement('div');
     time.className = "time mintContainer";
-    time.innerHTML = "Start: " + group.start_time + "<br>" + "End:  " + group.end_time;
+    
+    // Options for time translation
+    var options = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+    };
+
+    var start_time = new Date("January 1, 1970 " + group.start_time);
+    var start_time = start_time.toLocaleString('en-US', options);
+
+    var end_time = new Date("January 1, 1970 " + group.end_time);
+    var end_time = end_time.toLocaleString('en-US', options);
+
+    time.innerHTML = "Start: " + start_time + "<br>" + "End:  " + end_time;
 
 
     // Up Down Buttons
