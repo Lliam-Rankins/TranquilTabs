@@ -102,8 +102,6 @@ function populateWebsites(websites) {
 
 // Adds a website to the Unorder List of websites
 function addWebsite(website_list, website) {
-    // TODO: needs to also add the relevant delete buttons
-
     // Create Element
     const url = document.createElement("li");
     url.textContent = website;
@@ -466,12 +464,24 @@ document.getElementById("group_save_button").addEventListener("click", async fun
     }
 
     // Check if there is an ID or not
+    var existingGroup = true;
     let id = document.getElementById("group_save_button").getAttribute("data-edit-id");
-    if (id == '') id = await Groups.getNextID();
-
+    // No existing group
+    if (id == '') {
+        id = await Groups.getNextID();
+        existingGroup = false;
+    }
+    
     // Make new restriction
     let newRestrictionGroup = new RestrictionGroup(group_name, id, websites, null, pause_time, open_time, weekdays, start_time, end_time, opens, null);
     console.log(newRestrictionGroup);
+
+    // There was an existing group
+    if (existingGroup) {
+        // Save past opens left
+        let oldGroup = await Groups.getGroup(id);
+        newRestrictionGroup.opens_left = oldGroup.opens_left;
+    }
 
     // Post Restriction Group
     await Groups.postGroup(newRestrictionGroup);

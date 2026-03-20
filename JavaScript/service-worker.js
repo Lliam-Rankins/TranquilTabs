@@ -144,7 +144,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 chrome.runtime.onStartup.addListener(async () => {
     console.log("Startup");
 
-    // TODO need to go through all alarms in alarm list and check if done or not
+    // Grab list of alarms
     let alarmList = await AlarmList.getAlarms();
 
     console.log(alarmList);
