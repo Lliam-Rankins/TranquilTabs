@@ -20,7 +20,7 @@ body {
 
 #block_Body {
     flex-direction: column;
-    width: 33%;
+    width: clamp(33%, 50%,80%);
 
     /* Flexbox to control child layout */
     display: flex;
@@ -39,6 +39,9 @@ body {
     color: var(--mint);
     font-size: 70px;
     font-weight: 500;
+    text-overflow: clip;
+    width: 100%;
+    overflow-wrap: break-word;
 }
 
 #unlock_button {

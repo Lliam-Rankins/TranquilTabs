@@ -22,6 +22,9 @@ chrome.runtime.sendMessage({action: "blockPageInfoRequest"}, (response) => {
     document.getElementById("group_name").innerHTML = group.group_name;
     document.getElementById("open_text").innerHTML = "Opens: " + group.opens_left + "/" + group.opens_total;
 
+    // Set Tab Name
+    document.title = group.group_name;
+
     if (group.opens_left == 0) {
         document.getElementById("unlock_button").textContent = "Blocked";
     }
@@ -32,6 +35,24 @@ chrome.runtime.sendMessage({action: "blockPageInfoRequest"}, (response) => {
 
     // Display forest
     
+});
+
+// Receive of a group unblocking, check if same group, open if so.
+chrome.runtime.onMessage.addListener((msg, sender) => {
+    // Check if its from groupUnblock
+    if (msg.action === "groupUnblock") {
+        // Group is the same, open page
+        if (msg.group_id == group.id) {
+            // Send user to original webpage
+            window.open(link);
+
+            console.log("Unblocking Via Block Page")
+            console.log(msg.group_id);
+
+            // Close current tab
+            window.close();
+        }
+    }
 });
 
 
@@ -88,8 +109,13 @@ document.getElementById("unlock_button").addEventListener("click", async () => {
 
             // console.log(await AlarmList.getAlarms());
 
+            // Send message to other tabs, with group id
+            await chrome.runtime.sendMessage({action: "groupUnblock", group_id: group.id})
+
             // Send user to original webpage
             window.open(link);
+
+            
 
             // Close current tab
             window.close();
