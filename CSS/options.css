@@ -19,7 +19,7 @@ input {
 }
 
 html * {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
 }
 
 
@@ -233,10 +233,10 @@ button:active {
 /* Group Tools */
 .time {
     display: flex;
-    font-size: 100%;
     justify-content: center;
     align-items: center;
-    font-size: clamp(.5rem, 2vw, 1.5rem);
+    font-size: clamp(.5rem, 2.5vw, 1.5rem);
+    text-align: right;
 }
 
 .groupToolsBottom {
